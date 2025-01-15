@@ -1,0 +1,27 @@
+version: '3.8'
+name: udd-doc-search
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=uddDB
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - 5000:5432
+    networks:
+      - postgres-db-network
+
+volumes:
+  postgres-db-volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+
+networks:
+  postgres-db-network:
+    driver: bridge
