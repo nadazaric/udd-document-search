@@ -7,12 +7,14 @@ import com.udd.back.feature_auth.model.User;
 import com.udd.back.feature_auth.service.interf.IUserService;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -44,6 +46,21 @@ public class UserController {
         loginUserDTO.setRefreshToken(refreshToken);
 
         return loginUserDTO;
+    }
+
+    @PostMapping(value = "/refresh")
+    public LoginUserDTO refreshToken(@Valid @RequestBody LoginUserDTO dto) {
+        if (dto.getRefreshToken() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token missing");
+        }
+        if (jwtTokenUtil.isTokenExpired(dto.getRefreshToken()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Your refresh token has expired, please log in again");
+
+        String newJwt = jwtTokenUtil.generateToken(jwtTokenUtil.getUsernameFromToken(dto.getRefreshToken()), jwtTokenUtil.getRoleFromToken(dto.getRefreshToken()));
+        dto.setAccessToken(newJwt);
+        String newRefreshToken = jwtTokenUtil.generateRefreshToken(jwtTokenUtil.getUsernameFromToken(dto.getRefreshToken()), jwtTokenUtil.getRoleFromToken(dto.getRefreshToken()));
+        dto.setRefreshToken(newRefreshToken);
+        return dto;
     }
 
 }

@@ -19,6 +19,8 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.secret}")
     private String secret;
 
+    private static String ROLE_CLAIM = "role";
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
@@ -43,13 +45,13 @@ public class JwtTokenUtil implements Serializable {
 
     public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
+        claims.put(ROLE_CLAIM, role);
         return doGenerateToken(claims, username);
     }
 
     public String generateRefreshToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
+        claims.put(ROLE_CLAIM, role);
         return doGenerateRefreshToken(claims, username);
     }
 
@@ -63,6 +65,11 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
+    }
+
+    public String getRoleFromToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        return (String) claims.get(ROLE_CLAIM);
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

@@ -44,14 +44,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     }
                 } catch (IllegalArgumentException e) {
+                    System.out.println("JWT Token does not exist.");
                 } catch (ExpiredJwtException e) {
                     System.out.println("JWT Token has expired.");
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT Token has expired");
                 } catch (io.jsonwebtoken.MalformedJwtException e) {
                     System.out.println("Bad JWT Token.");
                 }
-            } else {
-                System.out.println("JWT Token does not exist.");
             }
         }
         chain.doFilter(request, response);
