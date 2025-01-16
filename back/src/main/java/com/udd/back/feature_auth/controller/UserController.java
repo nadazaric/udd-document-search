@@ -2,12 +2,16 @@ package com.udd.back.feature_auth.controller;
 
 import javax.validation.Valid;
 import com.udd.back.feature_auth.dto.LoginUserDTO;
+import com.udd.back.feature_auth.dto.RegisterUserDTO;
 import com.udd.back.feature_auth.dto.UserCredentialsDTO;
+import com.udd.back.feature_auth.dto.UserDetailsDTO;
 import com.udd.back.feature_auth.model.User;
 import com.udd.back.feature_auth.service.interf.IUserService;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -61,6 +65,13 @@ public class UserController {
         String newRefreshToken = jwtTokenUtil.generateRefreshToken(jwtTokenUtil.getUsernameFromToken(dto.getRefreshToken()), jwtTokenUtil.getRoleFromToken(dto.getRefreshToken()));
         dto.setRefreshToken(newRefreshToken);
         return dto;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDetailsDTO> register(@RequestBody RegisterUserDTO dto) throws ResourceNotFoundException {
+        User user = this.userService.register(dto);
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(user.getName(), user.getUsername());
+        return new ResponseEntity<>(userDetailsDTO, HttpStatus.CREATED);
     }
 
 }

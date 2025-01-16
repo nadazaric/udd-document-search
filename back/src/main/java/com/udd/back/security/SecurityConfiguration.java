@@ -32,6 +32,7 @@ public class SecurityConfiguration {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/user/refresh").permitAll()
+                .antMatchers("/api/user/register").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .antMatchers("/**").permitAll()
                 .and()
