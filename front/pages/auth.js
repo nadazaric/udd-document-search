@@ -60,19 +60,35 @@ export default function Auth() {
                     }
                 </div>
                 <div className={`${style.descriptionSide}`}>
-                    <div className={`${style.descriptionWrapper}`}>
-                        <p className={`big-title`} style={{color: 'white'}}>Right side</p>
-                        <div className="spacer-h-m" />
-                        <p className={style.description}>Some description. Lorem ipsum dolorem, bla bla bla.</p>
-                        <div className="spacer-h-s" />
-                        <Button 
-                            disableRipple 
-                            className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
-                            onClick={() => switchSids()}
-                        >
-                            Neko dugme
-                        </Button>
-                    </div>
+                    {isLogin ?
+                        <div className={`${style.descriptionWrapper}`}>
+                            <p className={`big-title`} style={{color: 'white'}}>New Here?</p>
+                            <div className="spacer-h-m" />
+                            <p className={style.description}>Create an account to get started! Sign up now and enjoy all the features.</p>
+                            <div className="spacer-h-s" />
+                            <Button 
+                                disableRipple 
+                                className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
+                                onClick={() => switchSids()}
+                            >
+                                Sign Up
+                            </Button>
+                        </div> :
+                        <div className={`${style.descriptionWrapper}`}>
+                            <p className={`big-title`} style={{color: 'white'}}>Already Have an Account?</p>
+                            <div className="spacer-h-m" />
+                            <p className={style.description}>Welcome back! Log in to access your account.</p>
+                            <div className="spacer-h-s" />
+                            <Button 
+                                disableRipple 
+                                className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
+                                onClick={() => switchSids()}
+                            >
+                                Sign In
+                            </Button>
+                        </div>
+                    }
+                    
                 </div>
             </div>
             <Popup
