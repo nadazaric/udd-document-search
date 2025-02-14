@@ -1,6 +1,6 @@
-import Navbar from "./Navbar"
-import style from '../styles/Layout.module.css'
+import style from '../../styles/Layout.module.css'
 import { useEffect, useState } from "react"
+import Navbar from './Navbar'
 
 export default function Layout({ children }) {
 
