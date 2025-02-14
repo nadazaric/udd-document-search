@@ -6,21 +6,21 @@
 }
 
 .grid {
-    --leftWidth: 30vw;
-    --rightWidth: 17vw;
-    --rightWidthChange: 5vw;
+    --formSideWidth: 30vw;
+    --descriptionSideWidth: 17vw;
+    --descriptionSideWidthChange: 5vw;
     --animationDuration: 0.5s;
     display: grid;
-    grid-template-columns: var(--leftWidth) var(--rightWidth);
+    grid-template-columns: var(--formSideWidth) var(--descriptionSideWidth);
     background-color: rgba(var(--CardBackground), 1);
     border-radius: var(--BorderRadius);
     box-shadow: var(--CardShadow);
     overflow: hidden;
-    height: 40vh;
+    height: 45vh;
 }
 
 /* Left side design and animations */
-.left {
+.formSide {
     background-color: transparent;
     padding: var(--CardPadding);
     display: grid;
@@ -28,26 +28,26 @@
     align-items: center;
 }
 
-.grid.notReversed .left {
-    animation: leftSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
+.grid.notReversed .formSide {
+    animation: formSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
 }
 
-@keyframes leftSideSwitchToNormal {
-    0% { transform: translateX(var(--rightWidth)); }
+@keyframes formSideSwitchToNormal {
+    0% { transform: translateX(var(--descriptionSideWidth)); }
     100% { transform: translateX(0); }
 }
 
-.grid.reversed .left {
-    animation: leftSideSwitch var(--animationDuration) ease-in-out forwards;
+.grid.reversed .formSide {
+    animation: formSideSwitch var(--animationDuration) ease-in-out forwards;
 }
 
-@keyframes leftSideSwitch {
+@keyframes formSideSwitch {
     0% { transform: translateX(0); }
-    100% { transform: translateX(var(--rightWidth)); }
+    100% { transform: translateX(var(--descriptionSideWidth)); }
 }
 
 /* Right side design and animations */
-.right {
+.descriptionSide {
     background-color: rgba(var(--PrimaryColor), 1);
     z-index: 2;
     display: grid;
@@ -55,38 +55,38 @@
     justify-content: center;
 }
 
-.grid.notReversed .right {
-    animation: rightSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
+.grid.notReversed .descriptionSide {
+    animation: descriptionSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
 }
 
-@keyframes rightSideSwitchToNormal {
+@keyframes descriptionSideSwitchToNormal {
     0% {
-        transform: translateX(calc(-1 * var(--leftWidth)));
-        width: var(--rightWidth);
+        transform: translateX(calc(-1 * var(--formSideWidth)));
+        width: var(--descriptionSideWidth);
     }
     50% {
-        width: calc(var(--rightWidth) + var(--rightWidthChange));
+        width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
     }
     100% {
         transform: translateX(0);
-        width: var(--rightWidth);
+        width: var(--descriptionSideWidth);
     }
 }
 
-.grid.reversed .right {
-    animation: rightSideSwitch var(--animationDuration) ease-in-out forwards;
+.grid.reversed .descriptionSide {
+    animation: descriptionSideSwitch var(--animationDuration) ease-in-out forwards;
 }
 
-@keyframes rightSideSwitch {
+@keyframes descriptionSideSwitch {
     0% {
         transform: translateX(0);
-        width: var(--rightWidth);
+        width: var(--descriptionSideWidth);
     }
     50% {
-        width: calc(var(--rightWidth) + var(--rightWidthChange));
+        width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
     }
     100% {
-        transform: translateX(calc(-1 * var(--leftWidth)));
-        width: var(--rightWidth);
+        transform: translateX(calc(-1 * var(--formSideWidth)));
+        width: var(--descriptionSideWidth);
     }
 }
