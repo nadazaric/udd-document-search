@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import style from '../styles/Auth.module.css'
+import LoginForm from '@/components/auth/LoginForm'
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true)
@@ -10,14 +11,18 @@ export default function Auth() {
         setIsFirstRender(false)
     }
 
+    function login(data) {
+        console.log(data)
+    }
+    
     return(
         <div className={style.page}>
-            <div
-                className={`${style.grid} ${isFirstRender ? '' : isLogin ? style.notReversed : style.reversed}`}
-            >
+            <div className={`${style.grid} ${isFirstRender ? '' : isLogin ? style.notReversed : style.reversed}`}>
                     <div className={`${style.left}`}>
-                        <p>{isLogin ? 'Login' : 'Registration'}</p>
-                        <p>Left side</p>
+                        <LoginForm 
+                            width={300}
+                            onSubmitClick={(data) => login(data)}
+                        />
                     </div>
                     <div className={`${style.right}`}>
                         <p>Right side</p>

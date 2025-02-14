@@ -7,7 +7,8 @@
 
 .grid {
     --leftWidth: 30vw;
-    --rightWidth: 15vw;
+    --rightWidth: 17vw;
+    --rightWidthChange: 5vw;
     --animationDuration: 0.5s;
     display: grid;
     grid-template-columns: var(--leftWidth) var(--rightWidth);
@@ -15,12 +16,16 @@
     border-radius: var(--BorderRadius);
     box-shadow: var(--CardShadow);
     overflow: hidden;
+    height: 40vh;
 }
 
 /* Left side design and animations */
 .left {
     background-color: transparent;
     padding: var(--CardPadding);
+    display: grid;
+    justify-content: center;
+    align-items: center;
 }
 
 .grid.notReversed .left {
@@ -28,13 +33,8 @@
 }
 
 @keyframes leftSideSwitchToNormal {
-    0% {
-        
-        transform: translateX(var(--rightWidth));
-    }
-    100% {
-        transform: translateX(0);
-    }
+    0% { transform: translateX(var(--rightWidth)); }
+    100% { transform: translateX(0); }
 }
 
 .grid.reversed .left {
@@ -42,19 +42,17 @@
 }
 
 @keyframes leftSideSwitch {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(var(--rightWidth));
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(var(--rightWidth)); }
 }
-
 
 /* Right side design and animations */
 .right {
-    background-color: aqua;
+    background-color: rgba(var(--PrimaryColor), 1);
     z-index: 2;
+    display: grid;
+    align-items: center;
+    justify-content: center;
 }
 
 .grid.notReversed .right {
@@ -63,11 +61,15 @@
 
 @keyframes rightSideSwitchToNormal {
     0% {
-        
         transform: translateX(calc(-1 * var(--leftWidth)));
+        width: var(--rightWidth);
+    }
+    50% {
+        width: calc(var(--rightWidth) + var(--rightWidthChange));
     }
     100% {
         transform: translateX(0);
+        width: var(--rightWidth);
     }
 }
 
@@ -77,10 +79,14 @@
 
 @keyframes rightSideSwitch {
     0% {
-        
         transform: translateX(0);
+        width: var(--rightWidth);
+    }
+    50% {
+        width: calc(var(--rightWidth) + var(--rightWidthChange));
     }
     100% {
         transform: translateX(calc(-1 * var(--leftWidth)));
+        width: var(--rightWidth);
     }
 }
