@@ -1,5 +1,11 @@
 :root {
-  --background: 244, 244, 244;
+  --Background: 244, 244, 244;
+  --CardBackground: 255, 255, 255;
+
+  --NavbarHeight: 60px;
+  --CardPadding: 20px;
+  --CardShadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  --BorderRadius: 20px;
 }
 
 * {
@@ -15,5 +21,12 @@ body {
 }
 
 body {
-  background-color: rgba(var(--background), 1);
+  background-color: rgba(var(--Background), 1);
+}
+
+.card {
+  background-color: rgba(var(--CardBackground), 1);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: var(--CardPadding);
+  border-radius: var(--BorderRadius);
 }

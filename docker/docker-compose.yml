@@ -6,11 +6,11 @@ services:
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=uddDB
+      - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     ports:
-      - 5000:5432
+      - ${DB_PORT}:5432
     networks:
       - postgres-db-network
 
