@@ -49,7 +49,6 @@
 
 /* ------------------------------------------------------------------------------------------------------ Buttons */
 .button {
-    font-family: "Titillium Web", sans-serif !important;
     padding: 10px !important;
     height: var(--InputHeight) !important;
     min-width: 80px !important;
@@ -58,7 +57,7 @@
     align-items: center !important;
     gap: 5px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: var(--BorderRadius) !important;
     border: none;
 }
@@ -94,4 +93,15 @@
     color: rgb(var(--SecondaryColor));
     border: solid 2px rgb(var(--SecondaryColor));
     background-color: rgb(var(--NavbarBackgroundColor));
+}
+
+.reversedOutlinedButton {
+    background-color: rgb(var(--PrimaryColor)) !important;
+    color: white !important;
+    border: solid 1px white !important;
+    transition: background-color 100ms ease-out;
+}
+
+.reversedOutlinedButton:hover {
+    background-color: rgba(var(--SecondaryColor), 0.1) !important;
 }

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import style from '../styles/Auth.module.css'
+import formStyle from '../styles/Form.module.css'
 import LoginForm from '@/components/auth/LoginForm'
-import RegistrationForm from '@/components/auth/RgistrationForm'
+import RegistrationForm from '@/components/auth/RegistrationForm'
 import { Popup } from '@/components/widgets/Popup'
 import { isValidEmail } from '@/helpers/RepresentationHelpers'
 import { ERROR } from '@/values/Errors'
+import { Button } from '@mui/material'
 
 export default function Auth() {
     const [isSwitch, setIsSwitch] = useState(true)
@@ -58,8 +60,19 @@ export default function Auth() {
                     }
                 </div>
                 <div className={`${style.descriptionSide}`}>
-                    <p>Right side</p>
-                    <button onClick={switchSids}>Change</button>
+                    <div className={`${style.descriptionWrapper}`}>
+                        <p className={`big-title`} style={{color: 'white'}}>Right side</p>
+                        <div className="spacer-h-m" />
+                        <p className={style.description}>Some description. Lorem ipsum dolorem, bla bla bla.</p>
+                        <div className="spacer-h-s" />
+                        <Button 
+                            disableRipple 
+                            className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
+                            onClick={() => switchSids()}
+                        >
+                            Neko dugme
+                        </Button>
+                    </div>
                 </div>
             </div>
             <Popup

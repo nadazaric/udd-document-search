@@ -22,7 +22,7 @@ export default function RegistrationForm({
         <div style={{ width: width }}>
             <p className="big-title" style={{textAlign: "center"}}>Create Account</p>
             <div className="spacer-h-m" />
-             <div className={style.form}>
+            <div className={style.form}>
                 <div className={`${style.inputWrapper} w-full`}>
                     <input 
                         className={style.input}
