@@ -7,6 +7,10 @@ import { Popup } from '@/components/widgets/Popup'
 import { isValidEmail } from '@/helpers/RepresentationHelpers'
 import { ERROR } from '@/values/Errors'
 import { Button } from '@mui/material'
+import axios from 'axios'
+import { BACK_BASE_URL } from '@/values/Enviroment'
+import { putUserAccessToken, putUserRefreshToken } from '@/helpers/Auth'
+import { useRouter } from 'next/router'
 
 export default function Auth() {
     const [isSwitch, setIsSwitch] = useState(true)
@@ -14,16 +18,30 @@ export default function Auth() {
     const [isLogin, setIsLogin] = useState(true)
     const [haveError, setHaveError] = useState(false)
     const [errorMessage, setErrorMesagge] = useState('')
+    const router = useRouter()
 
     function switchSids() {
         setIsSwitch(!isSwitch)
         setIsFirstRender(false)
         setTimeout(() => setIsLogin(!isLogin), 350)
-        
     }
 
-    function login(data) {
-        console.log(data)
+    async function login(data) {
+        try {
+            const response = await axios.post(`${BACK_BASE_URL}/user/login`, data)
+            if (response.status === 200) {
+                    putUserAccessToken(response.data.accessToken)
+                    putUserRefreshToken(response.data.refreshToken)
+                    router.push('/')
+            } else {
+                setErrorMesagge(ERROR.LOGIN_WRONG_CREDENTIALS)
+                setHaveError(true)
+            }
+        } catch (error) {
+            if (error.status == 401) setErrorMesagge(ERROR.LOGIN_WRONG_CREDENTIALS)
+            else setErrorMesagge(ERROR.SERVER)
+            setHaveError(true)
+        }
     }
 
     function register(data) {
