@@ -1,0 +1,8 @@
+.wrapper{
+    width: 100%;
+    height: var(--NavbarHeight);
+    background-color: rgba(var(--PrimaryColor), 1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

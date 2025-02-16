@@ -1,0 +1,111 @@
+.inputWrapper {
+    width: 250px;
+    border: 2px solid rgba(var(--DarkGray), 0.6);
+    border-radius: var(--BorderRadius);
+    transition: border-color 0.1s, color 0.1s;
+    height: var(--InputHeight);
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+}
+.inputWrapper:focus-within { border-color:  rgb(var(--PrimaryColor)); }
+.inputWrapper:hover:not(:focus-within) { border-color: rgb(var(--SecondaryColor)); }
+.input {
+    width: 100%;
+    margin: 0 5px 0 5px;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 14px;
+}
+.input:hover { background-color: transparent; }
+
+.inputIcon {
+    opacity: 0.5;
+    margin-left: 2px;
+}
+
+.inputIcon:hover {
+    color: rgb(var(--PrimaryColor)) !important;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.form {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    width: 100%;
+}
+
+.celearInput{
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    outline: none;
+}
+
+/* ------------------------------------------------------------------------------------------------------ Buttons */
+.button {
+    padding: 10px !important;
+    height: var(--InputHeight) !important;
+    min-width: 80px !important;
+    width: fit-content;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--BorderRadius) !important;
+    border: none;
+}
+
+.raisedButton {
+    background-color: rgb(var(--PrimaryColor)) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    transition: background-color 100ms ease-out;
+    border-radius: var(--BorderRadius);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.raisedButton:hover {
+    background-color: rgba(var(--PrimaryColor), 0.8) !important;
+}
+
+.raisedButton:focus {
+    background-color: rgba(var(--PrimaryColor), 0.8) !important;
+}
+
+.raisedButton:disabled {
+    background-color: rgba(var(--SecondaryColor), 0.5) !important;
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.outlinedButton {
+    color: rgb(var(--PrimaryColor)) !important;
+    border: solid 2px rgb(var(--PrimaryColor)) !important;
+    font-weight: 600 !important;
+    transition: background-color 100ms ease-out;
+    border-radius: var(--BorderRadius);
+}
+  
+.outlinedButton:hover {
+    color: rgb(var(--SecondaryColor));
+    border: solid 2px rgb(var(--SecondaryColor));
+    background-color: rgb(var(--NavbarBackgroundColor));
+}
+
+.reversedOutlinedButton {
+    background-color: rgb(var(--PrimaryColor)) !important;
+    color: white !important;
+    border: solid 1px white !important;
+    transition: background-color 100ms ease-out;
+}
+
+.reversedOutlinedButton:hover {
+    background-color: rgba(var(--SecondaryColor), 0.1) !important;
+}

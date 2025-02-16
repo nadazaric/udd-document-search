@@ -1,0 +1,171 @@
+.page {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid {
+    --formSideWidth: 30vw;
+    --descriptionSideWidth: 17vw;
+    --descriptionSideWidthChange: 5vw;
+    --animationDuration: 0.7s;
+    display: grid;
+    grid-template-columns: var(--formSideWidth) var(--descriptionSideWidth);
+    background-color: rgba(var(--CardBackground), 1);
+    border-radius: var(--BorderRadius);
+    box-shadow: var(--CardShadow);
+    overflow: hidden;
+    height: 45vh;
+}
+
+/* Left side design and animations */
+.formSide {
+    background-color: transparent;
+    padding: var(--CardPadding);
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid.notReversed .formSide {
+    animation: formSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes formSideSwitchToNormal {
+    0% { transform: translateX(var(--descriptionSideWidth)); }
+    100% { transform: translateX(0); }
+}
+
+.grid.reversed .formSide {
+    animation: formSideSwitch var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes formSideSwitch {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(var(--descriptionSideWidth)); }
+}
+
+.formTitle {
+    font-size: 26px;
+    font-weight: 600;
+    color: rgba(var(--PrimaryColor), 1);
+}
+
+/* Right side design and animations */
+.descriptionSide {
+    background-color: rgba(var(--PrimaryColor), 1);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.grid.notReversed .descriptionSide {
+    animation: descriptionSideSwitchToNormal var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes descriptionSideSwitchToNormal {
+    0% {
+        transform: translateX(calc(-1 * var(--formSideWidth)));
+        width: var(--descriptionSideWidth);
+    }
+    50% {
+        width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
+    }
+    100% {
+        transform: translateX(0);
+        width: var(--descriptionSideWidth);
+    }
+}
+
+.grid.reversed .descriptionSide {
+    animation: descriptionSideSwitch var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes descriptionSideSwitch {
+    0% {
+        transform: translateX(0);
+        width: var(--descriptionSideWidth);
+    }
+    50% {
+        width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
+    }
+    100% {
+        transform: translateX(calc(-1 * var(--formSideWidth)));
+        width: var(--descriptionSideWidth);
+    }
+}
+
+.descriptionWrapper {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding: var(--CardPadding);
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    color: white !important;
+}
+
+.description {
+    font-size: 12px;
+}
+
+.signInDescription {
+    width: var(--descriptionSideWidth);
+    visibility: hidden;
+}
+
+.grid.reversed .descriptionSide .signInDescription {
+    animation: signInDescription1 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signInDescription1 {
+    0% {
+        transform: translateX(calc(-2 * var(--descriptionSideWidth)));
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(0);
+        visibility: visible;
+    }
+}
+
+.grid.notReversed .descriptionSide .signInDescription {
+    animation: signInDescription2 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signInDescription2 {
+    0% {
+        transform: translateX(0);
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(calc(-2 * var(--descriptionSideWidth)));
+        visibility: visible;
+    }
+}
+
+.signUpDescription {
+    width: var(--descriptionSideWidth);
+}
+
+.grid.reversed .descriptionSide .signUpDescription {
+    animation: signUpDescription1 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signUpDescription1 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
+}
+
+.grid.notReversed .descriptionSide .signUpDescription {
+    animation: signUpDescription2 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signUpDescription2 {
+    0% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
+    100% { transform: translateX(0); }
+}
