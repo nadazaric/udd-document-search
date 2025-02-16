@@ -9,7 +9,7 @@
     --formSideWidth: 30vw;
     --descriptionSideWidth: 17vw;
     --descriptionSideWidthChange: 5vw;
-    --animationDuration: 0.5s;
+    --animationDuration: 0.7s;
     display: grid;
     grid-template-columns: var(--formSideWidth) var(--descriptionSideWidth);
     background-color: rgba(var(--CardBackground), 1);
@@ -57,9 +57,9 @@
     background-color: rgba(var(--PrimaryColor), 1);
     z-index: 2;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .grid.notReversed .descriptionSide {
@@ -99,15 +99,73 @@
 }
 
 .descriptionWrapper {
-    width: var(--descriptionSideWidth);
+    position: absolute;
+    width: 100%;
     text-align: center;
     padding: var(--CardPadding);
-    display: flex;
+    display: flex; 
     flex-direction: column;
     align-items: center;
+    color: white !important;
 }
 
 .description {
     font-size: 12px;
-    color: white;
+}
+
+.signInDescription {
+    width: var(--descriptionSideWidth);
+    visibility: hidden;
+}
+
+.grid.reversed .descriptionSide .signInDescription {
+    animation: signInDescription1 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signInDescription1 {
+    0% {
+        transform: translateX(calc(-2 * var(--descriptionSideWidth)));
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(0);
+        visibility: visible;
+    }
+}
+
+.grid.notReversed .descriptionSide .signInDescription {
+    animation: signInDescription2 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signInDescription2 {
+    0% {
+        transform: translateX(0);
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(calc(-2 * var(--descriptionSideWidth)));
+        visibility: visible;
+    }
+}
+
+.signUpDescription {
+    width: var(--descriptionSideWidth);
+}
+
+.grid.reversed .descriptionSide .signUpDescription {
+    animation: signUpDescription1 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signUpDescription1 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
+}
+
+.grid.notReversed .descriptionSide .signUpDescription {
+    animation: signUpDescription2 var(--animationDuration) ease-in-out forwards;
+}
+
+@keyframes signUpDescription2 {
+    0% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
+    100% { transform: translateX(0); }
 }
