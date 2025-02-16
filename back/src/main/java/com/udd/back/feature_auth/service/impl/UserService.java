@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,20 +36,21 @@ public class UserService implements IUserService {
 
     @Override
     public User register(RegisterUserDTO dto) throws ResourceNotFoundException {
-        boolean alreadyExist = alreadyExistWithUsername(dto.getUsername());
+        boolean alreadyExist = alreadyExistWithUsername(dto.getUsername(), dto.getEmail());
         if (alreadyExist) throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("User with username %s already exist!", dto.getUsername()));
         User user = new User(
                 dto.getName(),
                 dto.getUsername(),
+                dto.getEmail(),
                 passwordEncoder.encode(dto.getPassword()),
                 roleRepository.findByName("USER")
         );
         return userRepository.save(user);
     }
 
-    public boolean alreadyExistWithUsername(String username) {
-        Optional<User> userEntity = userRepository.findByUsername(username);
-        return userEntity.isPresent();
+    public boolean alreadyExistWithUsername(String username, String email) {
+        List<User> userEntity = userRepository.findByUsernameOrEmail(username, email);
+        return !userEntity.isEmpty();
     }
 
 }

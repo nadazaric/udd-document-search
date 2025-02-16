@@ -44,11 +44,21 @@ export default function Auth() {
         }
     }
 
-    function register(data) {
-        if(checkSingUpData(data)) {
-            // call back
-            switchSids()
-            console.log(data)
+    async function register(data) {
+        if (!checkSingUpData(data)) return
+        try {
+            const response = await axios.post(`${BACK_BASE_URL}/user/register`, data)
+            if (response.status === 201) {
+                switchSids()
+                // setIsLogin(true)
+            } else {
+                setErrorMesagge(ERROR.REGISTRATION_USERNAME_EXIST)
+                setHaveError(true)
+            }
+        } catch (error) {
+            if (error.status == 409) setErrorMesagge(ERROR.REGISTRATION_USERNAME_EXIST)
+            else setErrorMesagge(ERROR.SERVER)
+            setHaveError(true)
         }
     }
 
