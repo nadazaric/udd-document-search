@@ -4,3 +4,7 @@ export const ERROR = {
     LOGIN_WRONG_CREDENTIALS: 'Invalid username or password. Please check your credentials and try again.',
     SERVER: 'An unexpected error occurred. Please try again later.',
 }
+
+export const SUCCESS = {
+    REGISTRATION_DONE: 'Registration complete! You can now log in and start using your account.'
+}

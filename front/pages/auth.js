@@ -5,19 +5,21 @@ import LoginForm from '@/components/auth/LoginForm'
 import RegistrationForm from '@/components/auth/RegistrationForm'
 import { Popup } from '@/components/widgets/Popup'
 import { isValidEmail } from '@/helpers/RepresentationHelpers'
-import { ERROR } from '@/values/Errors'
+import { ERROR, SUCCESS } from '@/values/Messages'
 import { Button } from '@mui/material'
 import axios from 'axios'
 import { BACK_BASE_URL } from '@/values/Enviroment'
 import { putUserAccessToken, putUserRefreshToken } from '@/helpers/Auth'
 import { useRouter } from 'next/router'
+import { SEVERITY } from '@/helpers/Enums'
 
 export default function Auth() {
     const [isSwitch, setIsSwitch] = useState(true)
     const [isFirstRender, setIsFirstRender] = useState(true)
     const [isLogin, setIsLogin] = useState(true)
-    const [haveError, setHaveError] = useState(false)
-    const [errorMessage, setErrorMesagge] = useState('')
+    const [isPopupVisible, setIsPopupVisible] = useState(false)
+    const [popupMessage, setPopupMessage] = useState('')
+    const [severity, setSeverity] = useState(SEVERITY.SUCCESS)
     const router = useRouter()
 
     function switchSids() {
@@ -33,14 +35,12 @@ export default function Auth() {
                     putUserAccessToken(response.data.accessToken)
                     putUserRefreshToken(response.data.refreshToken)
                     router.push('/')
-            } else {
-                setErrorMesagge(ERROR.LOGIN_WRONG_CREDENTIALS)
-                setHaveError(true)
-            }
+            } 
         } catch (error) {
-            if (error.status == 401) setErrorMesagge(ERROR.LOGIN_WRONG_CREDENTIALS)
-            else setErrorMesagge(ERROR.SERVER)
-            setHaveError(true)
+            if (error.status == 401) setPopupMessage(ERROR.LOGIN_WRONG_CREDENTIALS)
+            else setPopupMessage(ERROR.SERVER)
+            setSeverity(SEVERITY.ERROR)
+            setIsPopupVisible(true)
         }
     }
 
@@ -50,23 +50,23 @@ export default function Auth() {
             const response = await axios.post(`${BACK_BASE_URL}/user/register`, data)
             if (response.status === 201) {
                 switchSids()
-                // setIsLogin(true)
-            } else {
-                setErrorMesagge(ERROR.REGISTRATION_USERNAME_EXIST)
-                setHaveError(true)
+                setPopupMessage(SUCCESS.REGISTRATION_DONE)
+                setSeverity(SEVERITY.SUCCESS)
+                setIsPopupVisible(true)
             }
         } catch (error) {
-            if (error.status == 409) setErrorMesagge(ERROR.REGISTRATION_USERNAME_EXIST)
-            else setErrorMesagge(ERROR.SERVER)
-            setHaveError(true)
+            if (error.status == 409) setPopupMessage(ERROR.REGISTRATION_USERNAME_EXIST)
+            else setPopupMessage(ERROR.SERVER)
+            setSeverity(SEVERITY.ERROR)
+            setIsPopupVisible(true)
         }
     }
 
     function checkSingUpData(data) {
         // check email pattern
         if (!isValidEmail(data.email)) {
-          setHaveError(true)
-          setErrorMesagge(ERROR.REGISTRATION_EMAIL)
+          setIsPopupVisible(true)
+          setPopupMessage(ERROR.REGISTRATION_EMAIL)
           return false
         }
         return true
@@ -120,10 +120,10 @@ export default function Auth() {
                 </div>
             </div>
             <Popup
-                open={haveError}
-                onClose={() => setHaveError(false)}
-                message={errorMessage}
-                severity="error"
+                open={isPopupVisible}
+                onClose={() => setIsPopupVisible(false)}
+                message={popupMessage}
+                severity={severity}
             />
         </div>
     )
