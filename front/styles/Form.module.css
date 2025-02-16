@@ -76,6 +76,10 @@
     background-color: rgba(var(--PrimaryColor), 0.8) !important;
 }
 
+.raisedButton:focus {
+    background-color: rgba(var(--PrimaryColor), 0.8) !important;
+}
+
 .raisedButton:disabled {
     background-color: rgba(var(--SecondaryColor), 0.5) !important;
     color: rgba(0, 0, 0, 0.5) !important;

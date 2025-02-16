@@ -45,7 +45,7 @@ export default function LoginForm({
             </div>
             <div className="spacer-h-s" />
             <Button 
-                disableRipple 
+                disableRipple
                 className={`${style.button} ${style.raisedButton} w-full`}
                 onClick={() => {if(onSubmitClick) onSubmitClick(form)}}
                 disabled={isButtonDisabled()}
