@@ -30,7 +30,7 @@ export default function Auth() {
 
     async function login(data) {
         try {
-            const response = await axios.post(`${BACK_BASE_URL}/user/login`, data)
+            const response = await axios.post(`${BACK_BASE_URL}/user/login`, data, {headers: {'skip': true}})
             if (response.status === 200) {
                     putUserAccessToken(response.data.accessToken)
                     putUserRefreshToken(response.data.refreshToken)
@@ -47,7 +47,7 @@ export default function Auth() {
     async function register(data) {
         if (!checkSingUpData(data)) return
         try {
-            const response = await axios.post(`${BACK_BASE_URL}/user/register`, data)
+            const response = await axios.post(`${BACK_BASE_URL}/user/register`, data, {headers: {'skip': true}})
             if (response.status === 201) {
                 switchSids()
                 setPopupMessage(SUCCESS.REGISTRATION_DONE)

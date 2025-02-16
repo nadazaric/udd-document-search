@@ -74,4 +74,9 @@ public class UserController {
         return new ResponseEntity<>(userDetailsDTO, HttpStatus.CREATED);
     }
 
+    @GetMapping("/hello")
+    public ResponseEntity<String> helloWorld() {
+        return new ResponseEntity<>("Hello world!", HttpStatus.OK);
+    }
+
 }
