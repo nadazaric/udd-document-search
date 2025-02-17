@@ -12,11 +12,10 @@ public class DocumentController {
     @PostMapping("/parse")
     @ResponseStatus(HttpStatus.CREATED)
     public IndexDocumentDTO parseDocument(ParseDocumentDTO documentDTO) {
-        IndexDocumentDTO indexDocumentDTO = new IndexDocumentDTO(
+        return new IndexDocumentDTO(
                 documentDTO.getFile().getOriginalFilename(),
                 documentDTO.getFile().getContentType(),
                 documentDTO.getFile().isEmpty()
         );
-        return indexDocumentDTO;
     }
 }

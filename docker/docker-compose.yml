@@ -3,6 +3,7 @@ name: udd-doc-search
 services:
   postgres:
     image: postgres
+    container_name: postgres
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -12,7 +13,23 @@ services:
     ports:
       - ${DB_PORT}:5432
     networks:
-      - postgres-db-network
+      - app-network
+  
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    ports:
+      - ${MINIO_PORT_API}:9000
+      - ${MINIO_PORT_WEBUI}:9090
+    environment:
+      - MINIO_ROOT_USER=${MINIO_USERNAME}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+    command: server /data --console-address ":9090"
+    volumes:
+      - minio-data:/data
+    restart: always
+    networks:
+      - app-network
 
 volumes:
   postgres-db-volume:
@@ -20,8 +37,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./data
+      device: ./data/postgres
+  
+  minio-data:
 
 networks:
-  postgres-db-network:
+  app-network:
     driver: bridge
