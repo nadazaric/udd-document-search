@@ -6,7 +6,7 @@ import com.udd.back.feature_auth.dto.RegisterUserDTO;
 import com.udd.back.feature_auth.dto.UserCredentialsDTO;
 import com.udd.back.feature_auth.dto.UserDetailsDTO;
 import com.udd.back.feature_auth.model.User;
-import com.udd.back.feature_auth.service.interf.IUserService;
+import com.udd.back.feature_auth.service.interf.UserService;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -28,7 +28,7 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    IUserService userService;
+    UserService userService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;

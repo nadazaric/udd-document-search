@@ -4,7 +4,6 @@ import com.udd.back.feature_auth.dto.RegisterUserDTO;
 import com.udd.back.feature_auth.model.User;
 import com.udd.back.feature_auth.repository.RoleRepository;
 import com.udd.back.feature_auth.repository.UserRepository;
-import com.udd.back.feature_auth.service.interf.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements com.udd.back.feature_auth.service.interf.UserService {
 
     @Autowired
     UserRepository userRepository;
