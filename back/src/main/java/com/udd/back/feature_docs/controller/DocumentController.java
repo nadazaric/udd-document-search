@@ -16,11 +16,7 @@ public class DocumentController {
     @PostMapping("/parse")
     @ResponseStatus(HttpStatus.CREATED)
     public IndexDocumentDTO parseDocument(ParseDocumentDTO documentDTO) {
-        fileService.store(documentDTO.getFile(), "test5");
-        return new IndexDocumentDTO(
-                documentDTO.getFile().getOriginalFilename(),
-                documentDTO.getFile().getContentType(),
-                documentDTO.getFile().isEmpty()
-        );
+        fileService.store(documentDTO.getFile(), "test");
+        return new IndexDocumentDTO();
     }
 }
