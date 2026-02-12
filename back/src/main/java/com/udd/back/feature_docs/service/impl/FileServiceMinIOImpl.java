@@ -27,7 +27,7 @@ public class FileServiceMinIOImpl implements FileService {
     }
 
     @Override
-    public void store(MultipartFile file, String serverFilename) {
+    public void store(MultipartFile file, String fileName) {
         if (file.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to store empty file.");
         List<String> filenameTokens = List.of(Objects.requireNonNull(file.getOriginalFilename()).split("\\."));
         if (!filenameTokens.get(filenameTokens.size() - 1).equals("pdf")) throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "PDF file type is required.");
@@ -35,7 +35,7 @@ public class FileServiceMinIOImpl implements FileService {
         try(InputStream inputStream = file.getInputStream()) {
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object(serverFilename + ".pdf")
+                    .object(fileName + ".pdf")
                     .headers(Collections.singletonMap("Content-Disposition", "attachment; filename=\"" + file.getOriginalFilename() + "\""))
                     .stream(inputStream, inputStream.available(), -1)
                     .build();
@@ -43,5 +43,7 @@ public class FileServiceMinIOImpl implements FileService {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Error while storing file in Minio.");
         }
+
     }
+
 }

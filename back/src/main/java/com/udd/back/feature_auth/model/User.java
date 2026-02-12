@@ -8,6 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "APP_USER")
 public class User {
+
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,4 +107,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

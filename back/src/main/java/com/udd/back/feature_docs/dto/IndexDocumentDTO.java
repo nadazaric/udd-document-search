@@ -1,25 +1,39 @@
 package com.udd.back.feature_docs.dto;
 
-import com.udd.back.feature_docs.enumeration.Severity;
+import com.udd.back.feature_docs.enumeration.Classification;
+
+import java.util.UUID;
 
 public class IndexDocumentDTO {
+    private UUID id;
     private String forensicAnalystName;
     private String certOrganization;
     private String malwareOrThreatName;
-    private Severity threatClassification;
+    private String behaviorDescription;
+    private Classification threatClassification;
     private String address;
     private String hash;
 
     public IndexDocumentDTO() {
     }
 
-    public IndexDocumentDTO(String forensicAnalystName, String certOrganization, String malwareOrThreatName, Severity threatClassification, String address, String hash) {
+    public IndexDocumentDTO(UUID id, String forensicAnalystName, String certOrganization, String malwareOrThreatName, String behaviorDescription, Classification threatClassification, String address, String hash) {
+        this.id = id;
         this.forensicAnalystName = forensicAnalystName;
         this.certOrganization = certOrganization;
         this.malwareOrThreatName = malwareOrThreatName;
+        this.behaviorDescription = behaviorDescription;
         this.threatClassification = threatClassification;
         this.address = address;
         this.hash = hash;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getForensicAnalystName() {
@@ -46,11 +60,19 @@ public class IndexDocumentDTO {
         this.malwareOrThreatName = malwareOrThreatName;
     }
 
-    public Severity getThreatClassification() {
+    public String getBehaviorDescription() {
+        return behaviorDescription;
+    }
+
+    public void setBehaviorDescription(String behaviorDescription) {
+        this.behaviorDescription = behaviorDescription;
+    }
+
+    public Classification getThreatClassification() {
         return threatClassification;
     }
 
-    public void setThreatClassification(Severity threatClassification) {
+    public void setThreatClassification(Classification threatClassification) {
         this.threatClassification = threatClassification;
     }
 
@@ -69,4 +91,5 @@ public class IndexDocumentDTO {
     public void setHash(String hash) {
         this.hash = hash;
     }
+
 }
