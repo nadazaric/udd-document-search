@@ -51,7 +51,8 @@ public class ParseFileServiceImpl implements ParseFileService {
                 behaviorDescription,
                 classification,
                 address,
-                hash
+                hash,
+                false
         );
     }
 

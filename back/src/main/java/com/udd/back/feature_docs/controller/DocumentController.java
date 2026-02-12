@@ -5,7 +5,6 @@ import com.udd.back.feature_docs.dto.ParseDocumentDTO;
 import com.udd.back.feature_docs.service.interf.FileService;
 import com.udd.back.feature_docs.service.interf.IndexFileService;
 import com.udd.back.feature_docs.service.interf.ParseFileService;
-import com.udd.back.index.repository.FileIndexRepository;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,10 +34,8 @@ public class DocumentController {
     }
 
     @PostMapping("/parse/confirm")
-    public ResponseEntity<Void> confirmParse(@RequestBody IndexDocumentDTO indexDocumentDTO) {
-        indexFileService.index(indexDocumentDTO);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<IndexDocumentDTO> confirmParse(@RequestBody IndexDocumentDTO indexDocumentDTO) {
+        return new ResponseEntity<>(indexFileService.index(indexDocumentDTO), HttpStatus.CREATED);
     }
 
 }

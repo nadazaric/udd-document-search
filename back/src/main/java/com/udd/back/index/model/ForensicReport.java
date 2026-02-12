@@ -21,11 +21,12 @@ public class ForensicReport {
     @Field(type = FieldType.Text, store = true, name = "certOrganization")
     private String certOrganization;
 
+    @Field(type = FieldType.Text, store = true, name = "address")
+    private String address;
 
     @GeoPointField
     @Field(store = true, name = "geoPoint")
     private GeoPoint geoPoint;
-
 
     @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName")
     private String malwareOrThreatName;
@@ -87,6 +88,14 @@ public class ForensicReport {
 
     public void setCertOrganization(String certOrganization) {
         this.certOrganization = certOrganization;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public GeoPoint getGeoPoint() {

@@ -14,10 +14,12 @@ public class IndexDocumentDTO {
     private String address;
     private String hash;
 
+    private Boolean geocoded;
+
     public IndexDocumentDTO() {
     }
 
-    public IndexDocumentDTO(UUID id, String forensicAnalystName, String certOrganization, String malwareOrThreatName, String behaviorDescription, Classification threatClassification, String address, String hash) {
+    public IndexDocumentDTO(UUID id, String forensicAnalystName, String certOrganization, String malwareOrThreatName, String behaviorDescription, Classification threatClassification, String address, String hash, Boolean geocoded) {
         this.id = id;
         this.forensicAnalystName = forensicAnalystName;
         this.certOrganization = certOrganization;
@@ -26,6 +28,7 @@ public class IndexDocumentDTO {
         this.threatClassification = threatClassification;
         this.address = address;
         this.hash = hash;
+        this.geocoded = geocoded;
     }
 
     public UUID getId() {
@@ -92,4 +95,11 @@ public class IndexDocumentDTO {
         this.hash = hash;
     }
 
+    public Boolean getGeocoded() {
+        return geocoded;
+    }
+
+    public void setGeocoded(Boolean geocoded) {
+        this.geocoded = geocoded;
+    }
 }
