@@ -1,6 +1,7 @@
 package com.udd.back.feature_docs.service.impl;
 
 import com.udd.back.feature_docs.service.interf.FileService;
+import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class FileServiceMinIOImpl implements FileService {
+public class MinIOFileServiceImpl implements FileService {
 
     private final MinioClient minioClient;
 
     @Value("${minio.bucket}")
     private String bucketName;
 
-    public FileServiceMinIOImpl(MinioClient minioClient) {
+    public MinIOFileServiceImpl(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
@@ -44,6 +45,20 @@ public class FileServiceMinIOImpl implements FileService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Error while storing file in Minio.");
         }
 
+    }
+
+    @Override
+    public byte[] getBytes(String fileName) {
+        try (InputStream is = minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName + ".pdf")
+                        .build()
+        )) {
+            return is.readAllBytes();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found in MinIO. File ID: %s.".formatted(fileName));
+        }
     }
 
 }

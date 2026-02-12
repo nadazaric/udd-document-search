@@ -29,10 +29,8 @@ public class IndexFileServiceImpl implements IndexFileService {
         Optional<FileMetadata> fileMetadata = fileMetadataService.getById(indexDocumentDTO.getId());
         FileStatus fileStatus = fileMetadata.get().getStatus();
 
-        if (fileStatus == FileStatus.CONFIRMED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File is already indexed. File ID: %s.", indexDocumentDTO.getId()));
-        } else if (fileStatus == FileStatus.REJECTED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File is already rejected. File ID: %s.", indexDocumentDTO.getId()));
+        if (fileStatus != FileStatus.PARSED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File status is CONFIRMED or REJECTED. File ID: %s.", indexDocumentDTO.getId()));
         }
 
         Optional<GeoPoint> geoPoint = geocodingService.geocode(indexDocumentDTO.getAddress());
@@ -59,6 +57,11 @@ public class IndexFileServiceImpl implements IndexFileService {
 
     @Override
     public void reject(UUID id) {
+        Optional<FileMetadata> fileMetadata = fileMetadataService.getById(id);
+        if (fileMetadata.isEmpty() || fileMetadata.get().getStatus() != FileStatus.PARSED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("File status is PARSED or REJECTED. File ID: %s.", id));
+        }
+
         fileMetadataService.changeStatus(id, FileStatus.REJECTED);
     }
 

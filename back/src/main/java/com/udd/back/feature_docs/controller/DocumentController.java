@@ -23,7 +23,7 @@ public class DocumentController {
     @Autowired IndexFileService indexFileService;
 
     @PostMapping("/parse")
-    public ResponseEntity<IndexDocumentDTO> parseDocument(
+    public ResponseEntity<IndexDocumentDTO> parseDocument (
             @ModelAttribute ParseDocumentDTO documentDTO,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
@@ -31,6 +31,11 @@ public class DocumentController {
         IndexDocumentDTO indexDocumentDTO = parseFileService.parseAndStore(documentDTO.getFile(), username);
 
         return new ResponseEntity<>(indexDocumentDTO, HttpStatus.CREATED) ;
+    }
+
+    @PostMapping("/reparse")
+    public ResponseEntity<IndexDocumentDTO> reparseDocument (@RequestParam UUID id) throws Exception {
+        return new ResponseEntity<>(parseFileService.reparse(id), HttpStatus.CREATED);
     }
 
     @PostMapping("/parse/confirm")

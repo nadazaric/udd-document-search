@@ -2,8 +2,10 @@ package com.udd.back.feature_docs.model;
 
 import com.udd.back.feature_auth.model.User;
 import com.udd.back.feature_docs.enumeration.FileStatus;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +21,10 @@ public class FileMetadata {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User author;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     public FileMetadata() {
     }
@@ -57,4 +63,7 @@ public class FileMetadata {
         this.author = author;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
