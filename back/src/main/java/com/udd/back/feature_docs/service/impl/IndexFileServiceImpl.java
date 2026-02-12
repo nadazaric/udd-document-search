@@ -2,6 +2,7 @@ package com.udd.back.feature_docs.service.impl;
 
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.FileStatus;
+import com.udd.back.feature_docs.model.FileMetadata;
 import com.udd.back.feature_docs.service.interf.FileMetadataService;
 import com.udd.back.feature_docs.service.interf.GeocodingService;
 import com.udd.back.feature_docs.service.interf.IndexFileService;
@@ -9,9 +10,12 @@ import com.udd.back.index.model.ForensicReport;
 import com.udd.back.index.repository.FileIndexRepository;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class IndexFileServiceImpl implements IndexFileService {
@@ -22,12 +26,17 @@ public class IndexFileServiceImpl implements IndexFileService {
 
     @Override
     public IndexDocumentDTO index(IndexDocumentDTO indexDocumentDTO) {
+        Optional<FileMetadata> fileMetadata = fileMetadataService.getById(indexDocumentDTO.getId());
+        FileStatus fileStatus = fileMetadata.get().getStatus();
+
+        if (fileStatus == FileStatus.CONFIRMED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File is already indexed. File ID: %s.", indexDocumentDTO.getId()));
+        } else if (fileStatus == FileStatus.REJECTED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File is already rejected. File ID: %s.", indexDocumentDTO.getId()));
+        }
 
         Optional<GeoPoint> geoPoint = geocodingService.geocode(indexDocumentDTO.getAddress());
-
-        if (geoPoint.isEmpty()) {
-            return indexDocumentDTO;
-        }
+        if (geoPoint.isEmpty()) return indexDocumentDTO;
 
         ForensicReport forensicReport = new ForensicReport();
 
@@ -47,4 +56,10 @@ public class IndexFileServiceImpl implements IndexFileService {
 
         return  indexDocumentDTO;
     }
+
+    @Override
+    public void reject(UUID id) {
+        fileMetadataService.changeStatus(id, FileStatus.REJECTED);
+    }
+
 }

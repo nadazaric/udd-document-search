@@ -32,9 +32,16 @@ public class FileMetadataServiceImpl implements FileMetadataService {
     }
 
     @Override
-    public void changeStatus(UUID id, FileStatus fileStatus) {
+    public Optional<FileMetadata> getById(UUID id) {
         Optional<FileMetadata> fileMetadata = fileMetadataRepository.findById(id);
         if (fileMetadata.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id.toString());
+
+        return fileMetadata;
+    }
+
+    @Override
+    public void changeStatus(UUID id, FileStatus fileStatus) {
+        Optional<FileMetadata> fileMetadata = getById(id);
 
         fileMetadata.get().setStatus(fileStatus);
         fileMetadataRepository.save(fileMetadata.get());

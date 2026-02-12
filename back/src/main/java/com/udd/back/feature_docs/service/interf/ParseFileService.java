@@ -5,6 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ParseFileService {
 
-    IndexDocumentDTO parse(MultipartFile file, String authorUsername) throws Exception;
+    IndexDocumentDTO parseAndStore(MultipartFile file, String authorUsername) throws Exception;
 
 }

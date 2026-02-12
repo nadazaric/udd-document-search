@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/document")
 public class DocumentController {
@@ -26,9 +28,7 @@ public class DocumentController {
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
         String username = jwtTokenUtil.getUsername(jwt);
-
-        IndexDocumentDTO indexDocumentDTO = parseFileService.parse(documentDTO.getFile(), username);
-        fileService.store(documentDTO.getFile(), indexDocumentDTO.getId().toString());
+        IndexDocumentDTO indexDocumentDTO = parseFileService.parseAndStore(documentDTO.getFile(), username);
 
         return new ResponseEntity<>(indexDocumentDTO, HttpStatus.CREATED) ;
     }
@@ -36,6 +36,12 @@ public class DocumentController {
     @PostMapping("/parse/confirm")
     public ResponseEntity<IndexDocumentDTO> confirmParse(@RequestBody IndexDocumentDTO indexDocumentDTO) {
         return new ResponseEntity<>(indexFileService.index(indexDocumentDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/parse/reject")
+    public ResponseEntity<Void> rejectParse(@RequestParam UUID id) {
+        indexFileService.reject(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
