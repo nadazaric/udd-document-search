@@ -1,6 +1,6 @@
 package com.udd.back.index.model;
 
-import org.apache.lucene.spatial3d.geom.GeoPoint;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.Id;

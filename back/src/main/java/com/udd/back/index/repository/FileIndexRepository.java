@@ -1,4 +1,4 @@
-package com.udd.back.index;
+package com.udd.back.index.repository;
 
 import com.udd.back.index.model.ForensicReport;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

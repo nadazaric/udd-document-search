@@ -1,7 +1,7 @@
 package com.udd.back.feature_docs.service.interf;
 
-import com.udd.back.feature_docs.dto.ParseDocumentDTO;
+import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 
 public interface IndexFileService {
-    void index(ParseDocumentDTO documentDTO);
+    void index(IndexDocumentDTO indexDocumentDTO);
 }

@@ -33,6 +33,10 @@ public class FileMetadata {
         return id;
     }
 
+    public String getStringId() {
+        return id.toString();
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }

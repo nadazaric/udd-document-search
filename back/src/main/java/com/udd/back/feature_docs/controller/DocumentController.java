@@ -3,9 +3,9 @@ package com.udd.back.feature_docs.controller;
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.dto.ParseDocumentDTO;
 import com.udd.back.feature_docs.service.interf.FileService;
+import com.udd.back.feature_docs.service.interf.IndexFileService;
 import com.udd.back.feature_docs.service.interf.ParseFileService;
-import com.udd.back.index.FileIndexRepository;
-import com.udd.back.index.model.ForensicReport;
+import com.udd.back.index.repository.FileIndexRepository;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,7 @@ public class DocumentController {
     @Autowired ParseFileService parseFileService;
     @Autowired FileService fileService;
     @Autowired JwtTokenUtil jwtTokenUtil;
-
-    @Autowired FileIndexRepository fileIndexRepository;
+    @Autowired IndexFileService indexFileService;
 
     @PostMapping("/parse")
     public ResponseEntity<IndexDocumentDTO> parseDocument(
@@ -36,15 +35,10 @@ public class DocumentController {
     }
 
     @PostMapping("/parse/confirm")
-    public ResponseEntity<IndexDocumentDTO> confirmParse(@RequestBody IndexDocumentDTO indexDocumentDTO) {
+    public ResponseEntity<Void> confirmParse(@RequestBody IndexDocumentDTO indexDocumentDTO) {
+        indexFileService.index(indexDocumentDTO);
 
-        ForensicReport forensicReport = new ForensicReport();
-        forensicReport.setId(indexDocumentDTO.getId());
-        forensicReport.setMalwareOrThreatName("Test");
-
-        fileIndexRepository.save(forensicReport);
-
-        return new ResponseEntity<>(indexDocumentDTO, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }
