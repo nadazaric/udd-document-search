@@ -1,0 +1,20 @@
+{
+  "analysis": {
+    "analyzer": {
+      "serbian_custom": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": [
+          "lowercase",
+          "serbian_stop"
+        ]
+      }
+    },
+    "filter": {
+      "serbian_stop": {
+        "type": "stop",
+        "stopwords": "_serbian_"
+      }
+    }
+  }
+}

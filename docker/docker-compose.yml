@@ -47,6 +47,20 @@ services:
     networks:
       - app-network
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ports:
+      - ${ELASTICSEARCH_PORT}:9200
+    networks:
+      - app-network
+    restart: always
+
 volumes:
   postgres-db-volume:
     driver: local
