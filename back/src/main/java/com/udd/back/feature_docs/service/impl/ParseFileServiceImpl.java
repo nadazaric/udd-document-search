@@ -3,9 +3,7 @@ package com.udd.back.feature_docs.service.impl;
 import com.udd.back.core.constants.RegexPattern;
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.Classification;
-import com.udd.back.feature_docs.enumeration.FileStatus;
 import com.udd.back.feature_docs.model.FileMetadata;
-import com.udd.back.feature_docs.repository.FileMetadataRepository;
 import com.udd.back.feature_docs.service.interf.FileMetadataService;
 import com.udd.back.feature_docs.service.interf.ParseFileService;
 import com.udd.back.feature_docs.service.interf.PdfExtractService;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +23,7 @@ public class ParseFileServiceImpl implements ParseFileService {
     private String content;
 
     @Override
-    public IndexDocumentDTO parse(MultipartFile file) {
+    public IndexDocumentDTO parse(MultipartFile file, String authorUsername) throws Exception {
         content = pdfExtractService.extractText(file);
 
         String forensicAnalystName = regexMatch(RegexPattern.ANALYST);
@@ -44,7 +41,7 @@ public class ParseFileServiceImpl implements ParseFileService {
             } catch (IllegalArgumentException ignored) {}
         }
 
-        FileMetadata fileMetadata = fileMetadataService.save();
+        FileMetadata fileMetadata = fileMetadataService.save(authorUsername);
 
         return new IndexDocumentDTO(
                 fileMetadata.getId(),

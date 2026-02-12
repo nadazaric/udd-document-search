@@ -2,7 +2,7 @@ version: '3.8'
 name: udd-doc-search
 services:
   postgres:
-    image: postgres
+    image: postgres:17
     container_name: postgres
     environment:
       - POSTGRES_USER=${DB_USERNAME}
