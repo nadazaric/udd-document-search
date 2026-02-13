@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class RegexPattern {
 
     // PARSING REGEX
+    // TODO: Add more options (Serbian and Cyrillic)
     public static final Pattern ANALYST         = Pattern.compile("(?im)forensic\\s*analyst\\s*name\\s*[:\\-]\\s*(.+)$");
     public static final Pattern ORG             = Pattern.compile("(?im)cert\\s*organization\\s*[:\\-]\\s*(.+)$");
     public static final Pattern MALWARE         = Pattern.compile("(?im)(?:malware|threat)\\s*name\\s*[:\\-]\\s*(.+)$");

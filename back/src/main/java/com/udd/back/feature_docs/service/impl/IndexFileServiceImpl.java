@@ -51,7 +51,7 @@ public class IndexFileServiceImpl implements IndexFileService {
 
         MultipartFile file = fileService.getFile(indexDocumentDTO.getId().toString());
         String content = pdfExtractService.extractText(file);
-        if (content == null) {
+        if (content == null || content.isBlank()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, String.format("File is empty. File ID: %s.", indexDocumentDTO.getId()));
         }
         forensicReport.setContent(content);
