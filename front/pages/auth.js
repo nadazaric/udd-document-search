@@ -9,7 +9,7 @@ import { ERROR, SUCCESS } from '@/values/Messages'
 import { Button } from '@mui/material'
 import axios from 'axios'
 import { BACK_BASE_URL } from '@/values/Enviroment'
-import { putUserAccessToken, putUserRefreshToken } from '@/helpers/Auth'
+import { putUserAccessToken } from '@/helpers/Auth'
 import { useRouter } from 'next/router'
 import { SEVERITY } from '@/helpers/Enums'
 
@@ -33,7 +33,6 @@ export default function Auth() {
             const response = await axios.post(`${BACK_BASE_URL}/user/login`, data, {headers: {'skip': true}})
             if (response.status === 200) {
                     putUserAccessToken(response.data.accessToken)
-                    putUserRefreshToken(response.data.refreshToken)
                     router.push('/')
             } 
         } catch (error) {

@@ -1,7 +1,6 @@
 import Layout from "@/components/widgets/Layout"
-import { getUserAccessToken, getUserRefreshToken } from "@/helpers/Auth"
+import { getUserAccessToken } from "@/helpers/Auth"
 import "@/styles/globals.css"
-import { BACK_BASE_URL } from "@/values/Enviroment"
 import axios from "axios"
 
 axios.interceptors.request.use(
@@ -16,35 +15,24 @@ axios.interceptors.request.use(
 )
 
 axios.interceptors.response.use(
-  response => { return response },
-  async function (error) {
-    const originalRequest = error.config
-    if (getUserAccessToken() == null) return
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true
-        return axios.post(`${BACK_BASE_URL}/api/user/refresh`, {
-            'accessToken': getUserAccessToken(),
-            'refreshToken': getUserRefreshToken(),
-          }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'skip': true
-            },
-          }).then(response => {
-            if (response.status === 200) {
-                localStorage.setItem('accessToken', response.data['accessToken'])
-                localStorage.setItem('refreshToken', response.data['refreshToken'])
-                return axios(originalRequest)
-            } else {
-                logOut();
-            }
-          }).catch(_err => {
-            logOut()
-          })
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (getUserAccessToken() == null) {
+      return Promise.reject(error);
     }
-    return Promise.reject(error)
+
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      if (!originalRequest._retry) {
+        originalRequest._retry = true;
+        logOut();
+      }
+    }
+
+    return Promise.reject(error);
   }
-)
+);
 
 export default function App({ Component, pageProps }) {
   return (
