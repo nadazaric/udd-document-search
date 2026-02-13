@@ -3,15 +3,14 @@ package com.udd.back.feature_docs.service.impl;
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.FileStatus;
 import com.udd.back.feature_docs.model.FileMetadata;
-import com.udd.back.feature_docs.service.interf.FileMetadataService;
-import com.udd.back.feature_docs.service.interf.GeocodingService;
-import com.udd.back.feature_docs.service.interf.IndexFileService;
+import com.udd.back.feature_docs.service.interf.*;
 import com.udd.back.index.model.ForensicReport;
 import com.udd.back.index.repository.FileIndexRepository;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -23,6 +22,8 @@ public class IndexFileServiceImpl implements IndexFileService {
     @Autowired FileIndexRepository fileIndexRepository;
     @Autowired FileMetadataService fileMetadataService;
     @Autowired GeocodingService geocodingService;
+    @Autowired PdfExtractService pdfExtractService;
+    @Autowired FileService fileService;
 
     @Override
     public IndexDocumentDTO index(IndexDocumentDTO indexDocumentDTO) {
@@ -46,6 +47,14 @@ public class IndexFileServiceImpl implements IndexFileService {
         forensicReport.setMalwareOrThreatName(indexDocumentDTO.getMalwareOrThreatName());
         forensicReport.setBehaviorDescription(indexDocumentDTO.getBehaviorDescription());
         forensicReport.setThreatClassification(indexDocumentDTO.getThreatClassification().toString());
+        forensicReport.setHash(indexDocumentDTO.getHash());
+
+        MultipartFile file = fileService.getFile(indexDocumentDTO.getId().toString());
+        String content = pdfExtractService.extractText(file);
+        if (content == null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, String.format("File is empty. File ID: %s.", indexDocumentDTO.getId()));
+        }
+        forensicReport.setContent(content);
 
         fileMetadataService.changeStatus(indexDocumentDTO.getId(), FileStatus.CONFIRMED);
 

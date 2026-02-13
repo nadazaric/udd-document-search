@@ -50,16 +50,9 @@ public class ParseFileServiceImpl implements ParseFileService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("PDF file type is not REJECTED. File ID: %s", id));
         }
 
-        byte[] bytes = fileService.getBytes(id.toString());
-        String fileName = String.format("%s.pdf", id);
-
-        MultipartFile file = new InMemoryMultipartFile(
-                bytes,
-                fileName,
-                "application/pdf"
-        );
-
+        MultipartFile file = fileService.getFile(id.toString());
         IndexDocumentDTO indexDocumentDTO = parse(file);
+
         indexDocumentDTO.setId(id);
 
         fileMetadataService.changeStatus(id, FileStatus.PARSED);

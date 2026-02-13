@@ -8,4 +8,6 @@ public interface FileService {
 
     byte[] getBytes(String fileName);
 
+    MultipartFile getFile(String fileName);
+
 }

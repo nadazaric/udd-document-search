@@ -1,5 +1,6 @@
 package com.udd.back.feature_docs.service.impl;
 
+import com.udd.back.feature_docs.model.InMemoryMultipartFile;
 import com.udd.back.feature_docs.service.interf.FileService;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -59,6 +60,19 @@ public class MinIOFileServiceImpl implements FileService {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found in MinIO. File ID: %s.".formatted(fileName));
         }
+    }
+
+    @Override
+    public MultipartFile getFile(String fileName) {
+        byte[] bytes = getBytes(fileName);
+        String fullFileName = String.format("%s.pdf", fileName);
+
+        return new InMemoryMultipartFile(
+                bytes,
+                fullFileName,
+                "application/pdf"
+        );
+
     }
 
 }

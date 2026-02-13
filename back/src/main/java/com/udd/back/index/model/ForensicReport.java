@@ -6,17 +6,15 @@ import org.springframework.data.elasticsearch.annotations.*;
 import jakarta.persistence.*;
 import java.util.UUID;
 
-@Document(indexName = "threat_intelligence_reports_index")
+@Document(indexName = "reports")
 @Setting(settingPath = "/configuration/serbian-analyzer-config.json")
 public class ForensicReport {
 
     @Id
     private UUID id;
 
-
     @Field(type = FieldType.Text, store = true, name = "forensicAnalystName")
     private String forensicAnalystName;
-
 
     @Field(type = FieldType.Text, store = true, name = "certOrganization")
     private String certOrganization;
@@ -31,24 +29,20 @@ public class ForensicReport {
     @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName")
     private String malwareOrThreatName;
 
-
     @Field(type = FieldType.Text, store = true, name = "behaviorDescription")
     private String behaviorDescription;
-
 
     @Field(type = FieldType.Keyword, store = true, name = "threatClassification")
     private String threatClassification;
 
-
     @Field(type = FieldType.Keyword, store = true, name = "hash")
     private String hash;
-
 
     @Field(type = FieldType.Text, store = true, name = "content", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String content;
 
-
-    @Field(type = FieldType.Dense_Vector, dims = 384, name = "vectorizedContent")
+    // TODO: Implement vectorization
+    @Field(type = FieldType.Dense_Vector, dims = 384, similarity = "cosine", name = "vectorizedContent")
     private float[] vectorizedContent;
 
     public ForensicReport() {}
