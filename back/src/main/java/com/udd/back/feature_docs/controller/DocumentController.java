@@ -2,7 +2,6 @@ package com.udd.back.feature_docs.controller;
 
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.dto.ParseDocumentDTO;
-import com.udd.back.feature_docs.service.interf.FileService;
 import com.udd.back.feature_docs.service.interf.IndexFileService;
 import com.udd.back.feature_docs.service.interf.ParseFileService;
 import com.udd.back.security.jwt.JwtTokenUtil;
@@ -18,7 +17,6 @@ import java.util.UUID;
 public class DocumentController {
 
     @Autowired ParseFileService parseFileService;
-    @Autowired FileService fileService;
     @Autowired JwtTokenUtil jwtTokenUtil;
     @Autowired IndexFileService indexFileService;
 
@@ -27,7 +25,7 @@ public class DocumentController {
             @ModelAttribute ParseDocumentDTO documentDTO,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        String username = jwtTokenUtil.getUsername(jwt);
+        String username = jwtTokenUtil.getUsernameFromJWT(jwt);
         IndexDocumentDTO indexDocumentDTO = parseFileService.parseAndStore(documentDTO.getFile(), username);
 
         return new ResponseEntity<>(indexDocumentDTO, HttpStatus.CREATED) ;

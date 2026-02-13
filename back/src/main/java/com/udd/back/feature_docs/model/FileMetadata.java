@@ -4,7 +4,7 @@ import com.udd.back.feature_auth.model.User;
 import com.udd.back.feature_docs.enumeration.FileStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -66,4 +66,5 @@ public class FileMetadata {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
 }

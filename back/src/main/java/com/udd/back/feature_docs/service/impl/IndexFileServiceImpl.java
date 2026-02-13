@@ -8,7 +8,7 @@ import com.udd.back.feature_docs.service.interf.GeocodingService;
 import com.udd.back.feature_docs.service.interf.IndexFileService;
 import com.udd.back.index.model.ForensicReport;
 import com.udd.back.index.repository.FileIndexRepository;
-import org.elasticsearch.common.geo.GeoPoint;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

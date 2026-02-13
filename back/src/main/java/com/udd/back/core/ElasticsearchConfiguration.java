@@ -1,17 +1,14 @@
 package com.udd.back.core;
 
-import org.elasticsearch.client.RestHighLevelClient;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.RestClients;
-import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.udd.back.index")
-public class ElasticsearchConfiguration extends AbstractElasticsearchConfiguration {
+public class ElasticsearchConfiguration
+        extends org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration {
 
         @Value("${elasticsearch.host}")
         private String host;
@@ -25,15 +22,10 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
         @Value("${elasticsearch.password}")
         private String password;
 
-        @NotNull
         @Override
-        public RestHighLevelClient elasticsearchClient() {
-                ClientConfiguration config = ClientConfiguration.builder()
-                        .connectedTo(host + ":" + port)
-                        .withBasicAuth(userName, password)
-                        .build();
-
-                return RestClients.create(config).rest();
+        public ClientConfiguration clientConfiguration() {
+                return ClientConfiguration.builder().connectedTo(host + ":" + port)
+                        .withBasicAuth(userName, password).build();
         }
 
 }

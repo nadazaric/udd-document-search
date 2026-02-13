@@ -3,7 +3,7 @@ package com.udd.back.feature_docs.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.udd.back.feature_docs.service.interf.GeocodingService;
-import org.elasticsearch.common.geo.GeoPoint;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

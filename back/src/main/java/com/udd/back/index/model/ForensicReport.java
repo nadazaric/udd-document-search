@@ -1,9 +1,9 @@
 package com.udd.back.index.model;
 
-import org.elasticsearch.common.geo.GeoPoint;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.data.elasticsearch.annotations.*;
 
-import javax.persistence.Id;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Document(indexName = "threat_intelligence_reports_index")
