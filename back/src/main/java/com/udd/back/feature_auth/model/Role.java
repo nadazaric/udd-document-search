@@ -1,6 +1,6 @@
 package com.udd.back.feature_auth.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 

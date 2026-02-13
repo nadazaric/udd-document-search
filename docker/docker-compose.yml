@@ -2,7 +2,8 @@ version: '3.8'
 name: udd-doc-search
 services:
   postgres:
-    image: postgres
+    image: postgres:17
+    container_name: postgres
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -12,7 +13,55 @@ services:
     ports:
       - ${DB_PORT}:5432
     networks:
-      - postgres-db-network
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - ${PGADMIN_PORT}:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    restart: always
+  
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    ports:
+      - ${MINIO_PORT_API}:9000
+      - ${MINIO_PORT_WEBUI}:9090
+    environment:
+      - MINIO_ROOT_USER=${MINIO_USERNAME}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+    command: server /data --console-address ":9090"
+    volumes:
+      - minio-data:/data
+    restart: always
+    networks:
+      - app-network
+
+  elasticsearch:
+    image: udd-elasticsearch:8.15.2-icu
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    ports:
+      - ${ELASTICSEARCH_PORT}:9200
+    networks:
+      - app-network
+    restart: always
 
 volumes:
   postgres-db-volume:
@@ -20,8 +69,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./data
+      device: ./data/postgres
+  minio-data:
+  pgadmin-data:
 
 networks:
-  postgres-db-network:
+  app-network:
     driver: bridge

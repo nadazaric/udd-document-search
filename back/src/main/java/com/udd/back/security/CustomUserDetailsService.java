@@ -15,8 +15,7 @@ import com.udd.back.feature_auth.model.User;
 @Service
 public class CustomUserDetailsService implements UserDetailsService{
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,4 +26,5 @@ public class CustomUserDetailsService implements UserDetailsService{
 
         return new org.springframework.security.core.userdetails.User(userEntity.getUsername(), userEntity.getPassword(), authorities);
     }
+
 }

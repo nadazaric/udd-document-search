@@ -2,19 +2,11 @@ export function putUserAccessToken(token) {
     window.localStorage.setItem('accessToken', JSON.stringify(token))
 }
 
-export function putUserRefreshToken(token) {
-    window.localStorage.setItem('refreshToken', JSON.stringify(token))
-}
-
 export function getUserAccessToken() {
     if (typeof window !== 'undefined') {
         return window.localStorage.getItem('accessToken')
     }
     return null;
-}
-
-export function getUserRefreshToken() {
-    return window.localStorage.getItem('refreshToken')
 }
 
 export function getUserRole() {
