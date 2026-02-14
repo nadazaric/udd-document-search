@@ -58,3 +58,14 @@ body {
   font-size: 22px;
   font-weight: 500;
 }
+
+.icon {
+  opacity: 0.55;
+  transition: color 100ms ease-out;
+  cursor: pointer;
+}
+
+.icon:hover {
+  color: rgb(var(--PrimaryColor));
+  opacity: 1;
+}

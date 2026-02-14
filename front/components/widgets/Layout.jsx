@@ -3,11 +3,15 @@ import { useEffect, useState } from "react"
 import Navbar from './Navbar'
 import { useRouter } from 'next/router'
 import { getUserRole } from '@/helpers/Auth'
+import { DialogWithHeader } from "./Dialog"
+import { AddNewDocument } from '../feature/AddNewDocument'
 
 export default function Layout({ children }) {
     const router = useRouter()
     const [isPageVisible, setIsPageVisible] = useState(false) 
     const [isNavbarVisible, setIsNavbarVisible] = useState(false)
+
+    const [openAddNewDialog, setOpenAddNewDialog] = useState(false)
 
     useEffect(() => {
         const role = getUserRole()
@@ -23,11 +27,23 @@ export default function Layout({ children }) {
     else return (
         <div>
             {isNavbarVisible && 
-                <div className={style.navbar}> <Navbar/> </div>
+                <div className={style.navbar}> 
+                    <Navbar
+                        onAddNewButtonClicked={() => setOpenAddNewDialog(true)} /> 
+                </div>
             }
+
             <div className={`${style.content} ${!isNavbarVisible ? style.contentWhenHiddenNavbar : ''}`}>
                 {children}
             </div>
+
+            <DialogWithHeader
+                isOpen={openAddNewDialog}
+                width={600}
+                onCloseModal={() => setOpenAddNewDialog(false)}
+                title="Add New Document">
+                    <AddNewDocument />
+            </DialogWithHeader>
         </div>
     )
 }

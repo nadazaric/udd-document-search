@@ -1,11 +1,13 @@
 import { logOut } from '@/helpers/Auth'
 import style from '../../styles/Navbar.module.css'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { Button } from '@mui/material'
 
-export default function Navbar() {
-    const router = useRouter()
+export default function Navbar({
+    onAddNewButtonClicked
+}) {
+
     const [selectedOption, setSelectedOption] = useState(OPTIONS.INDEXED)
 
     return(
@@ -19,12 +21,12 @@ export default function Navbar() {
                     Indexed Documents
                 </Link>
 
-                <Link
-                    className={`${style.option} ${selectedOption === OPTIONS.ADD ? style.selectedOption : ''}`}
-                    href={`/`}
-                    onClick={() => setSelectedOption(OPTIONS.ADD)} >
+                <Button
+                    className={style.option}
+                    disableRipple 
+                    onClick={() => onAddNewButtonClicked?.()} >
                     Add New
-                </Link>
+                </Button>
                 
                 <Link
                     className={`${style.option} ${selectedOption === OPTIONS.REJECTED ? style.selectedOption : ''}`}
