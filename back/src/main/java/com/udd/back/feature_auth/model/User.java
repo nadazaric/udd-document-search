@@ -1,9 +1,8 @@
 package com.udd.back.feature_auth.model;
 
+import com.udd.back.feature_auth.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "APP_USER")
@@ -29,35 +28,37 @@ public class User {
     @NotNull
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
+    @Column
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     public User() {
     }
 
-    public User(String name, @NotNull String username, @NotNull String email, @NotNull String password, Role role) {
+    public User(String name, @NotNull String username, @NotNull String email, @NotNull String password, UserRole role) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.roles.add(role);
+        this.role = role;
     }
 
-    public User(Long id, String name, @NotNull String username, @NotNull String password, Set<Role> roles) {
+    public User(Long id, String name, @NotNull String username, @NotNull String password, UserRole role) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
     }
 
-    public User(Long id, String name, @NotNull String username, @NotNull String email, @NotNull String password, Set<Role> roles) {
+    public User(Long id, String name, @NotNull String username, @NotNull String email, @NotNull String password, UserRole role) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
     }
 
     public Long getId() {
@@ -92,20 +93,20 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
 }

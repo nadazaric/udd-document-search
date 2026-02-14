@@ -1,6 +1,19 @@
 import Head from "next/head"
+import { useEffect, useState } from "react";
+import { DialogWithHeader } from "@/components/widgets/Dialog"
 
 export default function Home() {
+  
+  const [openDialog, setOpenDialog] = useState(false)
+
+  function onSoldierClick(soldier) {
+        setOpenDialog(true)
+    }
+
+    function onAddClick() {
+        setOpenDialog(true)
+    }
+
   return (
     <>
       <Head>
@@ -10,7 +23,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1>Front</h1>
+        <button onClick={() => setOpenDialog(true)}>
+          Dialog
+        </button>
+
+        <DialogWithHeader
+          isOpen={openDialog}
+          width={600}
+          onCloseModal={() => setOpenDialog(false)}
+          title="Dialog Title">
+            Lorem Ipsum
+        </DialogWithHeader>
       </main>
     </>
   );

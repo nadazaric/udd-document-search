@@ -1,8 +1,39 @@
 .wrapper{
-    width: 100%;
     height: var(--NavbarHeight);
     background-color: rgba(var(--PrimaryColor), 1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 10px;
+    border-radius: var(--BorderRadius);
+    box-shadow: var(--CardShadow);
+    padding: var(--NavbarMargin);
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    text-decoration: none;
+    color: rgb(var(--OnPrimaryColor));
+    height: fit-content;
+    padding: 8px 12px;
+    border-radius: var(--BorderRadius);
+    transition: outline 0.05s ease-out;
+}
+
+.option:hover {
+    background-color: rgb(var(--SecondaryColor));
+}
+
+.selectedOption {
+    background-color: rgb(var(--SecondaryColor));
+    font-weight: 600;
 }
