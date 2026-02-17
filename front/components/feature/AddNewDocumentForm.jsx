@@ -1,5 +1,5 @@
 import style from '../../styles/Form.module.css'
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Chips from '../widgets/Chips'
 
 export default function AddNewDocumentForm({
@@ -8,6 +8,7 @@ export default function AddNewDocumentForm({
 }) {
 
     const [form, setForm] = useState(formData ?? {})
+    const userEditRef = useRef(false)
     const CHIPS = [
         { value: "LOW", name: "Low" },
         { value: "MEDIUM", name: "Medium" },
@@ -16,17 +17,24 @@ export default function AddNewDocumentForm({
     ]
 
     useEffect(() => {
-        console.log(formData)
+        userEditRef.current = false
         setForm(formData)
     }, [formData])
 
     useEffect(() => {
+        if (!userEditRef.current) return
         onFormChange?.(form)
+        userEditRef.current = false
     }, [form, onFormChange])
 
-    function setField(key) {
-        return (form?.[key] ?? "")
+    const updateForm = (patch) => {
+        userEditRef.current = true
+        setForm((prev) => ({ ...(prev ?? {}), ...patch }))
     }
+
+    const setField = (key) => (form?.[key] ?? "")
+    const setText = (key) => (e) => updateForm({ [key]: e?.target?.value ?? "" })
+    const setValue = (key) => (val) => updateForm({ [key]: val })
 
     return (
         <div>
@@ -37,7 +45,7 @@ export default function AddNewDocumentForm({
                         <input 
                             className={style.input}
                             value={setField("forensicAnalystName")}
-                            onChange={(e) => {setForm({...form, forensicAnalystName: e.target.value})}} />
+                            onChange={setText("forensicAnalystName")} />
                     </div>
                 </div>
                 
@@ -47,7 +55,7 @@ export default function AddNewDocumentForm({
                         <input 
                             className={style.input}
                             value={setField("certOrganization")}
-                            onChange={(e) => {setForm({...form, certOrganization: e.target.value})}} />
+                            onChange={setText("certOrganization")} />
                     </div>
                 </div>
             </div>
@@ -61,7 +69,7 @@ export default function AddNewDocumentForm({
                         <input 
                             className={style.input}
                             value={setField("address")}
-                            onChange={(e) => {setForm({...form, address: e.target.value})}} />
+                            onChange={setText("address")} />
                     </div>
                 </div>
 
@@ -71,7 +79,7 @@ export default function AddNewDocumentForm({
                         <input 
                             className={style.input}
                             value={setField("malwareOrThreatName")}
-                            onChange={(e) => {setForm({...form, malwareOrThreatName: e.target.value})}} />
+                            onChange={setText("malwareOrThreatName")} />
                     </div>
                 </div>
             </div>
@@ -85,7 +93,7 @@ export default function AddNewDocumentForm({
                         <input 
                             className={style.input}
                             value={setField("hash")}
-                            onChange={(e) => {setForm({...form, hash: e.target.value})}} />
+                            onChange={setText("hash")} />
                     </div>
                 </div>
 
@@ -94,9 +102,7 @@ export default function AddNewDocumentForm({
                     <Chips 
                         items={CHIPS}
                         value={formData.threatClassification ?? CHIPS[0].value}
-                        onChange={(newValue) =>
-                            setForm((prev) => ({ ...(prev ?? {}), threatClassification: newValue }))
-                        }
+                        onChange={setValue("threatClassification")}
                         allowDeselect={false} />
                 </div>
             </div>
@@ -108,9 +114,9 @@ export default function AddNewDocumentForm({
                 <textarea 
                     className={style.input}
                     value={setField("behaviorDescription")}
-                    onChange={(e) => {setForm({...form, behaviorDescription: e.target.value})}} />
+                    onChange={setText("behaviorDescription")} />
             </div>
         </div>
     )
-    
+
 }
