@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState, useEffect } from "react"
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined"
 import style from "../../styles/UploadFile.module.css"
 
@@ -7,7 +7,8 @@ export default function UploadFile({
     maxSizeMb = 20, 
     onFileSelected,
     onError, 
-    title = "Browse file to upload" 
+    title = "Browse file to upload",
+    reset
 }) {
   const inputRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -15,6 +16,13 @@ export default function UploadFile({
   const [file, setFile] = useState(null)
 
   const maxBytes = useMemo(() => maxSizeMb * 1024 * 1024, [maxSizeMb])
+
+  useEffect(() => {
+    setIsDragging(false)
+    setError("")
+    setFile(null)
+    if (inputRef.current) inputRef.current.value = ""
+  }, [reset])
 
   function validateAndSet(selected) {
     if (!selected) return

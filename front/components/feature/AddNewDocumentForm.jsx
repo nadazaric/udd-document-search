@@ -4,7 +4,7 @@ import Chips from '../widgets/Chips'
 
 export default function AddNewDocumentForm({
     formData,
-    onFormChange 
+    onFormChange
 }) {
 
     const [form, setForm] = useState(formData ?? {})

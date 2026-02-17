@@ -2,17 +2,45 @@ import { Button } from "@mui/material"
 import UploadFile from "../widgets/UploadFile"
 import formStyle from "../../styles/Form.module.css"
 import animStyle from "../../styles/AddNewDocument.module.css"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useRef, useEffect } from "react"
 import axios from "axios"
 import { BACK_BASE_URL } from "@/values/Enviroment"
 import AddNewDocumentForm from "./AddNewDocumentForm"
 
-export function AddNewDocument() {
+export function AddNewDocument({
+    isOpen
+}) {
   const [file, setFile] = useState(null)
+  const [uploadReset, setUploadReset] = useState(false)
   const [parseButtonDisabled, setParseButtonDisabled] = useState(true)
-
   const [isFormOpen, setIsFormOpen] = useState(false) 
   const [form, setForm] = useState(null)     
+
+  const wasOpen = useRef(false)
+
+    useEffect(() => {
+        let t
+
+        if (isOpen) {
+            wasOpen.current = true
+            return
+        }
+
+        if (wasOpen.current && !isOpen) {
+            wasOpen.current = false
+
+            t = setTimeout(() => {
+                setFile(null)
+                setIsFormOpen(false)
+                setForm(null)
+                setUploadReset((prev) => !prev)
+            }, 500)
+        }
+
+        return () => {
+            if (t) clearTimeout(t)
+        }
+    }, [isOpen])
 
   function onFileSelected(f) {
     setFile(f)
@@ -60,7 +88,8 @@ export function AddNewDocument() {
                 <div className={animStyle.step}>
                     <UploadFile 
                         onFileSelected={onFileSelected} 
-                        onError={onFileSelectedError} />
+                        onError={onFileSelectedError}
+                        reset={uploadReset} />
 
                         <div className="spacer-h-s" />
                         
