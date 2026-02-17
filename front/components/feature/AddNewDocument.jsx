@@ -19,6 +19,7 @@ export function AddNewDocument({
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [form, setForm] = useState(null)
     const [geocodingError, setGeocodingError] = useState(false)
+    const [isRejected, setIsRejected] = useState(false)
 
     const wasOpen = useRef(false)
     const { showPopup } = usePopup()
@@ -31,6 +32,10 @@ export function AddNewDocument({
             return
         }
 
+        if (wasOpen.current && !isOpen && isFormOpen && !isRejected) {
+            rejectIdexing()
+        }
+
         if (wasOpen.current && !isOpen) {
             wasOpen.current = false
 
@@ -39,6 +44,8 @@ export function AddNewDocument({
                 setIsFormOpen(false)
                 setForm(null)
                 setUploadReset((prev) => !prev)
+                setGeocodingError(false)
+                setIsRejected(false)
             }, 500)
         }
 
@@ -112,6 +119,7 @@ export function AddNewDocument({
     async function rejectIdexing() {
         try {
             await axios.put(`${BACK_BASE_URL}/document/parse/reject?id=${form.id}`)
+            setIsRejected(true)
             closeDialog?.()
             showPopup({
                 message: 'Document indexing has been rejected.',
