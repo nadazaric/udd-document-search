@@ -4,6 +4,7 @@
   --PrimaryColor: 61, 141, 122;
   --SecondaryColor: 179, 216, 168;
   --DarkGray: 125, 130, 120;
+  --ErrorColor: 200, 30, 30;
 
   --NavbarHeight: 60px;
   --NavbarMargin: 10px;
@@ -40,6 +41,11 @@ body {
 
 /* ------------------------------------------------------------------------------------------------------ Width and Hight */
 .w-full { width: 100% !important; }
+
+/* ------------------------------------------------------------------------------------------------------ Common */
+.d {
+  background-color: yellowgreen;
+}
 
 .card {
   background-color: rgba(var(--CardBackground), 1);

@@ -38,12 +38,10 @@ public class JwtTokenUtilImpl implements JwtTokenUtil {
         Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
 
         return Jwts.builder()
                 .setSubject(username)
-                .setClaims(claims)
+                .claim("role", role)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .signWith(secret, SignatureAlgorithm.HS256)

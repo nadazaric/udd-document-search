@@ -4,15 +4,18 @@ import "@/styles/globals.css"
 import axios from "axios"
 
 axios.interceptors.request.use(
-  config => {
-      const token = getUserAccessToken()
-      if (token && !config.headers['skip']) config.headers['Authorization'] = `Bearer  ${token.replace(/"/g, '')}` 
-      return config
+  (config) => {
+    if (typeof window === "undefined") return config
+
+    const token = getUserAccessToken()
+    if (token && !config.headers?.skip) {
+      config.headers.Authorization = `Bearer ${token.replace(/"/g, "")}`
+    }
+    return config
   },
-  error => {
-      Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
+
 
 axios.interceptors.response.use(
   (response) => response,

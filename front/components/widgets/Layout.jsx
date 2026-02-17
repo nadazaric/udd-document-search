@@ -39,10 +39,10 @@ export default function Layout({ children }) {
 
             <DialogWithHeader
                 isOpen={openAddNewDialog}
-                width={600}
+                width={700}
                 onCloseModal={() => setOpenAddNewDialog(false)}
                 title="Add New Document">
-                    <AddNewDocument />
+                    {openAddNewDialog && <AddNewDocument />}
             </DialogWithHeader>
         </div>
     )
