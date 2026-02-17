@@ -8,6 +8,8 @@ import { BACK_BASE_URL } from "@/values/Enviroment"
 import AddNewDocumentForm from "./AddNewDocumentForm"
 import { usePopup } from "../widgets/PopupProvider"
 import { SEVERITY } from "@/helpers/Enums"
+import { ERROR, SUCCESS } from "@/values/Messages"
+import { LABEL } from "@/values/Labels"
 
 export function AddNewDocument({
     isOpen,
@@ -107,7 +109,7 @@ export function AddNewDocument({
             }
             closeDialog?.()
             showPopup({
-                message: 'Indexing completed successfully.',
+                message: SUCCESS.DOCUMENT_INDEX,
                 severity: SEVERITY.SUCCESS
             })
         } catch {
@@ -122,7 +124,7 @@ export function AddNewDocument({
             setIsRejected(true)
             closeDialog?.()
             showPopup({
-                message: 'Document indexing has been rejected.',
+                message: SUCCESS.INDEXING_REJECTED,
                 severity: SEVERITY.WARNING
             })
         } catch (error) {
@@ -149,7 +151,7 @@ export function AddNewDocument({
                                 disableRipple
                                 disabled={parseButtonDisabled}
                                 onClick={parseDocument} >
-                                Parse Document
+                                {LABEL.PARSE}
                             </Button>
                         </div>
                     </div>
@@ -164,7 +166,7 @@ export function AddNewDocument({
                         {geocodingError &&
                             <div
                                 className={animStyle.errorMessage}>
-                                We can’t geocode this address. Please provide a different one.
+                                {ERROR.GEOCODING}
                             </div>
                         }
 
@@ -173,7 +175,7 @@ export function AddNewDocument({
                                 className={`${formStyle.button} ${formStyle.outlinedButton}`}
                                 disableRipple
                                 onClick={rejectIdexing} >
-                                Reject Indexing
+                                {LABEL.REJECT}
                             </Button>
 
                             <Button
@@ -181,7 +183,7 @@ export function AddNewDocument({
                                 disableRipple
                                 disabled={!isFormValid}
                                 onClick={index} >
-                                Index Document
+                                {LABEL.INDEX}
                             </Button>
                         </div>
                     </div>

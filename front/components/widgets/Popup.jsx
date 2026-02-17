@@ -8,9 +8,9 @@ export function Popup({ open, message, severity, onClose, duration = 3000 }) {
             autoHideDuration={duration}
             onClose={onClose}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }} >
-            <Alert 
-                onClose={onClose} 
-                severity={severity} 
+            <Alert
+                onClose={onClose}
+                severity={severity}
                 sx={{ width: "100%" }}
                 variant="filled" >
                 {message}

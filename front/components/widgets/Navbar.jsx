@@ -10,7 +10,7 @@ export default function Navbar({
 
     const [selectedOption, setSelectedOption] = useState(OPTIONS.INDEXED)
 
-    return(
+    return (
         <div className={`${style.wrapper}`}>
             <h1>Document Search</h1>
             <div className={style.options}>
@@ -23,11 +23,11 @@ export default function Navbar({
 
                 <Button
                     className={style.option}
-                    disableRipple 
+                    disableRipple
                     onClick={() => onAddNewButtonClicked?.()} >
                     Add New
                 </Button>
-                
+
                 <Link
                     className={`${style.option} ${selectedOption === OPTIONS.REJECTED ? style.selectedOption : ''}`}
                     href={`/`}

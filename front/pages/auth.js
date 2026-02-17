@@ -3,7 +3,7 @@ import style from '../styles/Auth.module.css'
 import formStyle from '../styles/Form.module.css'
 import LoginForm from '@/components/auth/LoginForm'
 import { isValidEmail } from '@/helpers/RepresentationHelpers'
-import { ERROR, SUCCESS } from '@/values/Messages'
+import { ERROR, INFO, SUCCESS } from '@/values/Messages'
 import { Button } from '@mui/material'
 import axios from 'axios'
 import { BACK_BASE_URL } from '@/values/Enviroment'
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { SEVERITY } from '@/helpers/Enums'
 import { usePopup } from '@/components/widgets/PopupProvider'
 import RegistrationForm from '@/components/auth/RegistrationForm'
+import { LABEL } from '@/values/Labels'
 
 export default function Auth() {
     const [isSwitch, setIsSwitch] = useState(true)
@@ -90,30 +91,48 @@ export default function Auth() {
                 <div className={`${style.descriptionSide}`}>
 
                     <div className={`${style.descriptionWrapper} ${style.signInDescription}`}>
-                        <p className={`big-title`} style={{ color: 'white' }}>Already Have an Account?</p>
+                        <p
+                            className={`big-title`}
+                            style={{ color: 'white' }}>
+                            {INFO.ALREADY_HAVE_ACCOUNT}
+                        </p>
+
                         <div className="spacer-h-m" />
-                        <p className={style.description}>Welcome back! Log in to access your account.</p>
+
+                        <p className={style.description}>
+                            {INFO.WELCOME_BACK}
+                        </p>
+
                         <div className="spacer-h-m" />
+
                         <Button
                             disableRipple
                             className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
-                            onClick={() => switchSids()}
-                        >
-                            Sign In
+                            onClick={() => switchSids()} >
+                            {LABEL.SIGN_IN}
                         </Button>
                     </div>
 
                     <div className={`${style.descriptionWrapper} ${style.signUpDescription}`}>
-                        <p className={`big-title`} style={{ color: 'white' }}>New Here?</p>
+                        <p
+                            className={`big-title`}
+                            style={{ color: 'white' }}>
+                            {INFO.NEW_HERE}
+                        </p>
+
                         <div className="spacer-h-m" />
-                        <p className={style.description}>Create an account to get started! Sign up now and enjoy all the features.</p>
+
+                        <p className={style.description}>
+                            {INFO.CREATE_ACCOUNT}
+                        </p>
+
                         <div className="spacer-h-m" />
+
                         <Button
                             disableRipple
                             className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
-                            onClick={() => switchSids()}
-                        >
-                            Sign Up
+                            onClick={() => switchSids()} >
+                            {LABEL.SIGN_UP}
                         </Button>
                     </div>
 

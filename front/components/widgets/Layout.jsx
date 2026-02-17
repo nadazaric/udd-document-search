@@ -8,7 +8,7 @@ import { AddNewDocument } from '../feature/AddNewDocument'
 
 export default function Layout({ children }) {
     const router = useRouter()
-    const [isPageVisible, setIsPageVisible] = useState(false) 
+    const [isPageVisible, setIsPageVisible] = useState(false)
     const [isNavbarVisible, setIsNavbarVisible] = useState(false)
 
     const [openAddNewDialog, setOpenAddNewDialog] = useState(false)
@@ -26,10 +26,10 @@ export default function Layout({ children }) {
     if (!isPageVisible) return null
     else return (
         <div>
-            {isNavbarVisible && 
-                <div className={style.navbar}> 
+            {isNavbarVisible &&
+                <div className={style.navbar}>
                     <Navbar
-                        onAddNewButtonClicked={() => setOpenAddNewDialog(true)} /> 
+                        onAddNewButtonClicked={() => setOpenAddNewDialog(true)} />
                 </div>
             }
 
@@ -42,9 +42,10 @@ export default function Layout({ children }) {
                 width={700}
                 onCloseModal={() => setOpenAddNewDialog(false)}
                 title="Add New Document">
-                    <AddNewDocument 
-                        isOpen={openAddNewDialog}
-                        closeDialog={() => setOpenAddNewDialog(false)} />
+                    
+                <AddNewDocument
+                    isOpen={openAddNewDialog}
+                    closeDialog={() => setOpenAddNewDialog(false)} />
             </DialogWithHeader>
         </div>
     )

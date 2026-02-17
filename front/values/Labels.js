@@ -1,0 +1,23 @@
+export const LABEL = {
+    USERNAME: 'Username',
+    PASSWORD: 'Password',
+    SIGN_IN: 'Sign In',
+    CREATE_ACCOUNT: 'Create Account',
+    FULL_NAME: 'Full Name',
+    EMAIL: 'Email',
+    SIGN_UP: 'Sign Up',
+    PARSE: 'Parse Document',
+    REJECT: 'Reject Indexing',
+    INDEX: 'Index Document',
+    LOW_CLASSIFICATION: 'Low',
+    MEDIUM_CLASSIFICATION: 'Medium',
+    HIGH_CLASSIFICATION: 'High',
+    CRITICAL_CLASSIFICATION: 'Critical',
+    FORENSIC_NAME: 'Forensic Analyst Name',
+    ORGANIZATION: 'Organization Name',
+    ADDRESS: 'Address',
+    MALWARE_NAME: 'Malware or Threat Name',
+    HASH: 'Hash Value',
+    CLASSIFICATION: 'Clasification',
+    BEHAVIOR_DESCRIPTION: 'Behavior Description'
+}

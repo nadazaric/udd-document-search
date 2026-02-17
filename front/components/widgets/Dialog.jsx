@@ -3,11 +3,11 @@ import style from '../../styles/Dialog.module.css'
 import CloseIcon from '@mui/icons-material/Close'
 import { Button } from "@mui/material"
 
-export function Dialog({ 
-    isOpen=false, 
-    width=300,
-    onCloseModal, 
-    children 
+export function Dialog({
+    isOpen = false,
+    width = 300,
+    onCloseModal,
+    children
 }) {
     const ref = useRef()
     useEffect(() => {
@@ -19,7 +19,7 @@ export function Dialog({
         }
     }, [isOpen])
 
-    return(
+    return (
         <dialog
             className={`${style.dialog} ${isOpen ? style.show : style.hide}`}
             style={{ width: `${width}px` }}
@@ -30,27 +30,27 @@ export function Dialog({
     )
 }
 
-export function DialogWithHeader({ 
-    isOpen=false, 
-    width=300,
-    onCloseModal, 
-    title, 
+export function DialogWithHeader({
+    isOpen = false,
+    width = 300,
+    onCloseModal,
+    title,
     children,
     haveError,
-    errorDescription 
+    errorDescription
 }) {
-    return(
+    return (
         <Dialog
             isOpen={isOpen}
             width={width}
             onCloseModal={onCloseModal} >
             <div className={style.header}>
                 <div className='title' >{title}</div>
-                <CloseIcon 
+                <CloseIcon
                     className='icon'
-                    onClick={() => {if(onCloseModal) onCloseModal()}} />
+                    onClick={() => { if (onCloseModal) onCloseModal() }} />
             </div>
-            {haveError && 
+            {haveError &&
                 <div>
                     {/* <div className='spacer_hor_S'/> */}
                     <div className="error">{errorDescription}</div>
@@ -65,17 +65,17 @@ export function DialogWithHeader({
 }
 
 export function DialogConfirme({
-    isOpen=false, 
-    width=300,
+    isOpen = false,
+    width = 300,
     neutralActionText,
     onNeutralAction,
     actionText,
-    onAction, 
+    onAction,
     title,
     description
 }) {
 
-    return(
+    return (
         <Dialog
             isOpen={isOpen}
             width={width}
@@ -90,16 +90,16 @@ export function DialogConfirme({
             <div className='spacer_hor_S' />
 
             <div className={style.buttonWrapper}>
-                <Button 
+                <Button
                     onClick={(e) => {
                         e.preventDefault()
-                        if(onNeutralAction) onNeutralAction()
+                        if (onNeutralAction) onNeutralAction()
                     }}
                     className="outlinedButton" >
                     {neutralActionText}
                 </Button>
 
-                <Button 
+                <Button
                     onClick={(e) => {
                         e.stopPropagation()
                         if (onAction) onAction()

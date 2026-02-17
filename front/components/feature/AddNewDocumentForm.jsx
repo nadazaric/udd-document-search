@@ -1,6 +1,7 @@
 import style from '../../styles/Form.module.css'
 import { useEffect, useRef, useState } from "react"
 import Chips from '../widgets/Chips'
+import { LABEL } from '@/values/Labels'
 
 export default function AddNewDocumentForm({
     formData,
@@ -10,10 +11,10 @@ export default function AddNewDocumentForm({
     const [form, setForm] = useState(formData ?? {})
     const userEditRef = useRef(false)
     const CHIPS = [
-        { value: "LOW", name: "Low" },
-        { value: "MEDIUM", name: "Medium" },
-        { value: "HIGH", name: "High" },
-        { value: "CRITICAL", name: "Critical" },
+        { value: "LOW", name: LABEL.LOW_CLASSIFICATION },
+        { value: "MEDIUM", name: LABEL.MEDIUM_CLASSIFICATION },
+        { value: "HIGH", name: LABEL.HIGH_CLASSIFICATION },
+        { value: "CRITICAL", name: LABEL.CRITICAL_CLASSIFICATION },
     ]
 
     useEffect(() => {
@@ -40,7 +41,7 @@ export default function AddNewDocumentForm({
         <div>
             <div className={style.twoColumns}>
                 <div>
-                    <div className={style.label}>Forensic Analyst Name</div>
+                    <div className={style.label}>{LABEL.FORENSIC_NAME}</div>
                     <div className={`${style.inputWrapper} w-full`}>
                         <input 
                             className={style.input}
@@ -50,7 +51,7 @@ export default function AddNewDocumentForm({
                 </div>
                 
                 <div>
-                    <div className={style.label}>CERT Organization Name</div>
+                    <div className={style.label}>{LABEL.ORGANIZATION}</div>
                     <div className={`${style.inputWrapper} w-full`}>
                         <input 
                             className={style.input}
@@ -64,7 +65,7 @@ export default function AddNewDocumentForm({
 
             <div className={style.twoColumns}>
                 <div>
-                    <div className={style.label}>Address</div>
+                    <div className={style.label}>{LABEL.ADDRESS}</div>
                     <div className={`${style.inputWrapper} w-full`}>
                         <input 
                             className={style.input}
@@ -74,7 +75,7 @@ export default function AddNewDocumentForm({
                 </div>
 
                 <div>
-                    <div className={style.label}>Malware or Threat Name</div>
+                    <div className={style.label}>{LABEL.MALWARE_NAME}</div>
                     <div className={`${style.inputWrapper} w-full`}>
                         <input 
                             className={style.input}
@@ -88,7 +89,7 @@ export default function AddNewDocumentForm({
 
             <div className={style.twoColumns}>
                 <div>
-                    <div className={style.label}>Hash Value</div>
+                    <div className={style.label}>{LABEL.HASH}</div>
                     <div className={`${style.inputWrapper} w-full`}>
                         <input 
                             className={style.input}
@@ -98,7 +99,7 @@ export default function AddNewDocumentForm({
                 </div>
 
                 <div>
-                    <div className={style.label}>Clasification</div>
+                    <div className={style.label}>{LABEL.CLASSIFICATION}</div>
                     <Chips 
                         items={CHIPS}
                         value={formData.threatClassification ?? CHIPS[0].value}
@@ -109,7 +110,7 @@ export default function AddNewDocumentForm({
 
             <div className="spacer-h-s" />
 
-            <div className={style.label}>Behavior Description</div>
+            <div className={style.label}>{LABEL.BEHAVIOR_DESCRIPTION}</div>
                 <div className={`${style.inputWrapper} ${style.textareaInputWrapper} w-full`}>
                 <textarea 
                     className={style.input}
