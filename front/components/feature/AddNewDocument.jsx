@@ -6,17 +6,21 @@ import { useMemo, useState, useRef, useEffect } from "react"
 import axios from "axios"
 import { BACK_BASE_URL } from "@/values/Enviroment"
 import AddNewDocumentForm from "./AddNewDocumentForm"
+import { usePopup } from "../widgets/PopupProvider"
+import { SEVERITY } from "@/helpers/Enums"
 
 export function AddNewDocument({
-    isOpen
+    isOpen, 
+    closeDialog
 }) {
-  const [file, setFile] = useState(null)
-  const [uploadReset, setUploadReset] = useState(false)
-  const [parseButtonDisabled, setParseButtonDisabled] = useState(true)
-  const [isFormOpen, setIsFormOpen] = useState(false) 
-  const [form, setForm] = useState(null)     
+    const [file, setFile] = useState(null)
+    const [uploadReset, setUploadReset] = useState(false)
+    const [parseButtonDisabled, setParseButtonDisabled] = useState(true)
+    const [isFormOpen, setIsFormOpen] = useState(false)
+    const [form, setForm] = useState(null)
 
-  const wasOpen = useRef(false)
+    const wasOpen = useRef(false)
+    const { showPopup } = usePopup()
 
     useEffect(() => {
         let t
@@ -42,92 +46,108 @@ export function AddNewDocument({
         }
     }, [isOpen])
 
-  function onFileSelected(f) {
-    setFile(f)
-    setParseButtonDisabled(false)
-  }
-
-  function onFileSelectedError() {
-    setFile(null)
-    setParseButtonDisabled(true)
-  }
-
-  async function parseDocument() {
-    try {
-      const fd = new FormData()
-      fd.append("file", file)
-
-      const response = await axios.post(`${BACK_BASE_URL}/document/parse`, fd)
-      setForm(response.data)   
-      setIsFormOpen(true)         
-    } catch (error) {
-      console.log(error)
-      setParseButtonDisabled(true)
+    // ---------------------------------------------------------------------------- Upload File
+    function onFileSelected(f) {
+        setFile(f)
+        setParseButtonDisabled(false)
     }
-  }
 
-  const isNonEmpty = (x) => String(x ?? "").trim().length > 0
+    function onFileSelectedError() {
+        setFile(null)
+        setParseButtonDisabled(true)
+    }
 
-  const isFormValid = useMemo(() => {
-    if (!form) return false
+    async function parseDocument() {
+        try {
+            const fd = new FormData()
+            fd.append("file", file)
+
+            const response = await axios.post(`${BACK_BASE_URL}/document/parse`, fd)
+            setForm(response.data)
+            setIsFormOpen(true)
+        } catch (error) {
+            console.log(error)
+            setParseButtonDisabled(true)
+        }
+    }
+
+    // ---------------------------------------------------------------------------- Index File
+    const isNonEmpty = (x) => String(x ?? "").trim().length > 0
+
+    const isFormValid = useMemo(() => {
+        if (!form) return false
+        return (
+            isNonEmpty(form.forensicAnalystName) &&
+            isNonEmpty(form.certOrganization) &&
+            isNonEmpty(form.malwareOrThreatName) &&
+            isNonEmpty(form.hash) &&
+            isNonEmpty(form.threatClassification) &&
+            isNonEmpty(form.behaviorDescription)
+        )
+    }, [form])
+
+    async function rejectIdexing() {
+        try {
+            await axios.put(`${BACK_BASE_URL}/document/parse/reject?id=${form.id}`)
+            closeDialog?.()
+            showPopup({
+                message: 'Indexing is rejected', 
+                severity: SEVERITY.WARNING
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
-      isNonEmpty(form.forensicAnalystName) &&
-      isNonEmpty(form.certOrganization) &&
-      isNonEmpty(form.malwareOrThreatName) &&
-      isNonEmpty(form.hash) &&
-      isNonEmpty(form.threatClassification) &&
-      isNonEmpty(form.behaviorDescription)
-    )
-  }, [form])
+        <div className={animStyle.container}>
+            <div className={animStyle.viewport}>
+                <div className={`${animStyle.track} ${isFormOpen ? animStyle.toForm : animStyle.toUpload}`}>
 
-  return (
-    <div className={animStyle.container}>
-        <div className={animStyle.viewport}>
-            <div className={`${animStyle.track} ${isFormOpen ? animStyle.toForm : animStyle.toUpload}`}>
-
-                <div className={animStyle.step}>
-                    <UploadFile 
-                        onFileSelected={onFileSelected} 
-                        onError={onFileSelectedError}
-                        reset={uploadReset} />
+                    <div className={animStyle.step}>
+                        <UploadFile
+                            onFileSelected={onFileSelected}
+                            onError={onFileSelectedError}
+                            reset={uploadReset} />
 
                         <div className="spacer-h-s" />
-                        
+
                         <div className={formStyle.buttonsWrapperToRight}>
-                        <Button
-                            className={`${formStyle.button} ${formStyle.raisedButton}`}
-                            disableRipple
-                            disabled={parseButtonDisabled}
-                            onClick={parseDocument} >
-                            Parse Document
-                        </Button>
+                            <Button
+                                className={`${formStyle.button} ${formStyle.raisedButton}`}
+                                disableRipple
+                                disabled={parseButtonDisabled}
+                                onClick={parseDocument} >
+                                Parse Document
+                            </Button>
+                        </div>
                     </div>
-                </div>
 
-                <div className={animStyle.step}>
-                    <AddNewDocumentForm
-                        formData={form ?? {}}
-                        onFormChange={(updatedForm) => setForm(updatedForm)} />
+                    <div className={animStyle.step}>
+                        <AddNewDocumentForm
+                            formData={form ?? {}}
+                            onFormChange={(updatedForm) => setForm(updatedForm)} />
 
-                    <div className="spacer-h-s" />
+                        <div className="spacer-h-s" />
 
-                    <div className={formStyle.buttonsWrapperToRight}>
-                        <Button 
-                            className={`${formStyle.button} ${formStyle.outlinedButton}`} 
-                            disableRipple >
-                            Reject Indexing
-                        </Button>
+                        <div className={formStyle.buttonsWrapperToRight}>
+                            <Button
+                                className={`${formStyle.button} ${formStyle.outlinedButton}`}
+                                disableRipple
+                                onClick={rejectIdexing} >
+                                Reject Indexing
+                            </Button>
 
-                        <Button
-                            className={`${formStyle.button} ${formStyle.raisedButton}`}
-                            disableRipple
-                            disabled={!isFormValid} >
-                            Index Document
-                        </Button>
+                            <Button
+                                className={`${formStyle.button} ${formStyle.raisedButton}`}
+                                disableRipple
+                                disabled={!isFormValid} >
+                                Index Document
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }

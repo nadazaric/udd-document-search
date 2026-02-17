@@ -2,8 +2,6 @@ import { useState } from 'react'
 import style from '../styles/Auth.module.css'
 import formStyle from '../styles/Form.module.css'
 import LoginForm from '@/components/auth/LoginForm'
-import RegistrationForm from '@/components/auth/RegistrationForm'
-import { Popup } from '@/components/widgets/Popup'
 import { isValidEmail } from '@/helpers/RepresentationHelpers'
 import { ERROR, SUCCESS } from '@/values/Messages'
 import { Button } from '@mui/material'
@@ -12,15 +10,15 @@ import { BACK_BASE_URL } from '@/values/Enviroment'
 import { putUserAccessToken } from '@/helpers/Auth'
 import { useRouter } from 'next/router'
 import { SEVERITY } from '@/helpers/Enums'
+import { usePopup } from '@/components/widgets/PopupProvider'
+import RegistrationForm from '@/components/auth/RegistrationForm'
 
 export default function Auth() {
     const [isSwitch, setIsSwitch] = useState(true)
     const [isFirstRender, setIsFirstRender] = useState(true)
     const [isLogin, setIsLogin] = useState(true)
-    const [isPopupVisible, setIsPopupVisible] = useState(false)
-    const [popupMessage, setPopupMessage] = useState('')
-    const [severity, setSeverity] = useState(SEVERITY.SUCCESS)
     const router = useRouter()
+    const { showPopup } = usePopup()
 
     function switchSids() {
         setIsSwitch(!isSwitch)
@@ -30,53 +28,56 @@ export default function Auth() {
 
     async function login(data) {
         try {
-            const response = await axios.post(`${BACK_BASE_URL}/user/login`, data, {headers: {'skip': true}})
+            const response = await axios.post(`${BACK_BASE_URL}/user/login`, data, { headers: { 'skip': true } })
             if (response.status === 200) {
-                    putUserAccessToken(response.data.accessToken)
-                    router.push('/')
-            } 
+                putUserAccessToken(response.data.accessToken)
+                router.push('/')
+            }
         } catch (error) {
-            if (error.status == 401) setPopupMessage(ERROR.LOGIN_WRONG_CREDENTIALS)
-            else setPopupMessage(ERROR.SERVER)
-            setSeverity(SEVERITY.ERROR)
-            setIsPopupVisible(true)
+            showPopup({
+                message: error.status == 401 ? ERROR.LOGIN_WRONG_CREDENTIALS : ERROR.SERVER,
+                severity: SEVERITY.ERROR
+            })
         }
     }
 
     async function register(data) {
         if (!checkSingUpData(data)) return
         try {
-            const response = await axios.post(`${BACK_BASE_URL}/user/register`, data, {headers: {'skip': true}})
+            const response = await axios.post(`${BACK_BASE_URL}/user/register`, data, { headers: { 'skip': true } })
             if (response.status === 201) {
                 switchSids()
-                setPopupMessage(SUCCESS.REGISTRATION_DONE)
-                setSeverity(SEVERITY.SUCCESS)
-                setIsPopupVisible(true)
+                showPopup({
+                    message: SUCCESS.REGISTRATION_DONE,
+                    severity: SEVERITY.SUCCESS
+                })
             }
         } catch (error) {
-            if (error.status == 409) setPopupMessage(ERROR.REGISTRATION_USERNAME_EXIST)
-            else setPopupMessage(ERROR.SERVER)
-            setSeverity(SEVERITY.ERROR)
-            setIsPopupVisible(true)
+            showPopup({
+                message: error.status == 401 ? ERROR.REGISTRATION_USERNAME_EXIST : ERROR.SERVER,
+                severity: SEVERITY.ERROR
+            })
         }
     }
 
     function checkSingUpData(data) {
         // check email pattern
         if (!isValidEmail(data.email)) {
-          setIsPopupVisible(true)
-          setPopupMessage(ERROR.REGISTRATION_EMAIL)
-          return false
+            showPopup({
+                message: ERROR.REGISTRATION_EMAIL,
+                severity: SEVERITY.ERROR
+            })
+            return false
         }
         return true
     }
-    
-    return(
+
+    return (
         <div className={style.page}>
             <div className={`${style.grid} ${isFirstRender ? '' : isSwitch ? style.notReversed : style.reversed}`}>
                 <div className={`${style.formSide}`}>
                     {isLogin ?
-                        <LoginForm 
+                        <LoginForm
                             width={300}
                             onSubmitClick={(data) => login(data)}
                         /> :
@@ -89,12 +90,12 @@ export default function Auth() {
                 <div className={`${style.descriptionSide}`}>
 
                     <div className={`${style.descriptionWrapper} ${style.signInDescription}`}>
-                        <p className={`big-title`} style={{color: 'white'}}>Already Have an Account?</p>
+                        <p className={`big-title`} style={{ color: 'white' }}>Already Have an Account?</p>
                         <div className="spacer-h-m" />
                         <p className={style.description}>Welcome back! Log in to access your account.</p>
                         <div className="spacer-h-m" />
-                        <Button 
-                            disableRipple 
+                        <Button
+                            disableRipple
                             className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
                             onClick={() => switchSids()}
                         >
@@ -103,27 +104,21 @@ export default function Auth() {
                     </div>
 
                     <div className={`${style.descriptionWrapper} ${style.signUpDescription}`}>
-                        <p className={`big-title`} style={{color: 'white'}}>New Here?</p>
+                        <p className={`big-title`} style={{ color: 'white' }}>New Here?</p>
                         <div className="spacer-h-m" />
                         <p className={style.description}>Create an account to get started! Sign up now and enjoy all the features.</p>
                         <div className="spacer-h-m" />
-                        <Button 
-                            disableRipple 
+                        <Button
+                            disableRipple
                             className={`${formStyle.button} ${formStyle.reversedOutlinedButton}`}
                             onClick={() => switchSids()}
                         >
                             Sign Up
                         </Button>
                     </div>
-                    
+
                 </div>
             </div>
-            <Popup
-                open={isPopupVisible}
-                onClose={() => setIsPopupVisible(false)}
-                message={popupMessage}
-                severity={severity}
-            />
         </div>
     )
 }

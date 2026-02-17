@@ -7,11 +7,14 @@ export function Popup({ open, message, severity, onClose, duration = 3000 }) {
             open={open}
             autoHideDuration={duration}
             onClose={onClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-            <Alert onClose={onClose} severity={severity} sx={{ width: "100%" }}>
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }} >
+            <Alert 
+                onClose={onClose} 
+                severity={severity} 
+                sx={{ width: "100%" }}
+                variant="filled" >
                 {message}
             </Alert>
         </Snackbar>
-    );
+    )
 }

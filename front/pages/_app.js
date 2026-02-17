@@ -1,4 +1,5 @@
 import Layout from "@/components/widgets/Layout"
+import { PopupProvider } from "@/components/widgets/PopupProvider"
 import { getUserAccessToken } from "@/helpers/Auth"
 import "@/styles/globals.css"
 import axios from "axios"
@@ -39,8 +40,10 @@ axios.interceptors.response.use(
 
 export default function App({ Component, pageProps }) {
   return (
+    <PopupProvider>
       <Layout>
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       </Layout>
+    </PopupProvider>
   )
 }

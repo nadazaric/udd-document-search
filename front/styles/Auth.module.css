@@ -33,8 +33,13 @@
 }
 
 @keyframes formSideSwitchToNormal {
-    0% { transform: translateX(var(--descriptionSideWidth)); }
-    100% { transform: translateX(0); }
+    0% {
+        transform: translateX(var(--descriptionSideWidth));
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .grid.reversed .formSide {
@@ -42,8 +47,13 @@
 }
 
 @keyframes formSideSwitch {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(var(--descriptionSideWidth)); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(var(--descriptionSideWidth));
+    }
 }
 
 .formTitle {
@@ -71,9 +81,11 @@
         transform: translateX(calc(-1 * var(--formSideWidth)));
         width: var(--descriptionSideWidth);
     }
+
     50% {
         width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
     }
+
     100% {
         transform: translateX(0);
         width: var(--descriptionSideWidth);
@@ -89,9 +101,11 @@
         transform: translateX(0);
         width: var(--descriptionSideWidth);
     }
+
     50% {
         width: calc(var(--descriptionSideWidth) + var(--descriptionSideWidthChange));
     }
+
     100% {
         transform: translateX(calc(-1 * var(--formSideWidth)));
         width: var(--descriptionSideWidth);
@@ -103,7 +117,7 @@
     width: 100%;
     text-align: center;
     padding: var(--CardPadding);
-    display: flex; 
+    display: flex;
     flex-direction: column;
     align-items: center;
     color: white !important;
@@ -127,6 +141,7 @@
         transform: translateX(calc(-2 * var(--descriptionSideWidth)));
         visibility: visible;
     }
+
     100% {
         transform: translateX(0);
         visibility: visible;
@@ -142,6 +157,7 @@
         transform: translateX(0);
         visibility: visible;
     }
+
     100% {
         transform: translateX(calc(-2 * var(--descriptionSideWidth)));
         visibility: visible;
@@ -157,8 +173,13 @@
 }
 
 @keyframes signUpDescription1 {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(2 * var(--descriptionSideWidth)));
+    }
 }
 
 .grid.notReversed .descriptionSide .signUpDescription {
@@ -166,6 +187,11 @@
 }
 
 @keyframes signUpDescription2 {
-    0% { transform: translateX(calc(2 * var(--descriptionSideWidth))); }
-    100% { transform: translateX(0); }
+    0% {
+        transform: translateX(calc(2 * var(--descriptionSideWidth)));
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
