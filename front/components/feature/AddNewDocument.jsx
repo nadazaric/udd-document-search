@@ -10,7 +10,7 @@ import { usePopup } from "../widgets/PopupProvider"
 import { SEVERITY } from "@/helpers/Enums"
 
 export function AddNewDocument({
-    isOpen, 
+    isOpen,
     closeDialog
 }) {
     const [file, setFile] = useState(null)
@@ -18,6 +18,7 @@ export function AddNewDocument({
     const [parseButtonDisabled, setParseButtonDisabled] = useState(true)
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [form, setForm] = useState(null)
+    const [geocodingError, setGeocodingError] = useState(false)
 
     const wasOpen = useRef(false)
     const { showPopup } = usePopup()
@@ -72,6 +73,10 @@ export function AddNewDocument({
     }
 
     // ---------------------------------------------------------------------------- Index File
+    useEffect(() => {
+        if (geocodingError) setGeocodingError(false)
+    }, [form?.address])
+
     const isNonEmpty = (x) => String(x ?? "").trim().length > 0
 
     const isFormValid = useMemo(() => {
@@ -86,12 +91,30 @@ export function AddNewDocument({
         )
     }, [form])
 
+    async function index() {
+        try {
+            const response = await axios.post(`${BACK_BASE_URL}/document/parse/confirm`, form)
+            if (!response.data.geocoded) {
+                setGeocodingError(true)
+                return
+            }
+            closeDialog?.()
+            showPopup({
+                message: 'Indexing completed successfully.',
+                severity: SEVERITY.SUCCESS
+            })
+        } catch {
+            console.log(error)
+        }
+
+    }
+
     async function rejectIdexing() {
         try {
             await axios.put(`${BACK_BASE_URL}/document/parse/reject?id=${form.id}`)
             closeDialog?.()
             showPopup({
-                message: 'Indexing is rejected', 
+                message: 'Document indexing has been rejected.',
                 severity: SEVERITY.WARNING
             })
         } catch (error) {
@@ -130,6 +153,13 @@ export function AddNewDocument({
 
                         <div className="spacer-h-s" />
 
+                        {geocodingError &&
+                            <div
+                                className={animStyle.errorMessage}>
+                                We can’t geocode this address. Please provide a different one.
+                            </div>
+                        }
+
                         <div className={formStyle.buttonsWrapperToRight}>
                             <Button
                                 className={`${formStyle.button} ${formStyle.outlinedButton}`}
@@ -141,7 +171,8 @@ export function AddNewDocument({
                             <Button
                                 className={`${formStyle.button} ${formStyle.raisedButton}`}
                                 disableRipple
-                                disabled={!isFormValid} >
+                                disabled={!isFormValid}
+                                onClick={index} >
                                 Index Document
                             </Button>
                         </div>
