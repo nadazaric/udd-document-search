@@ -7,16 +7,42 @@ import { useState } from "react";
 import { LABEL } from "@/values/Labels";
 import SearchForm from "@/components/feature/SearchForm";
 import IndexInfoCard from "@/components/feature/IndexInfoCard";
+import axios from "axios";
+import { BACK_BASE_URL } from "@/values/Enviroment";
 
 export default function Home() {
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false)
-  const [results, setResults] = useState([])
+  const [searchRequest, setSearchRequest] = useState(null)
+  const [results, setResults] = useState(null)
 
-  function onResponseRecieved(results) {
-    setResults(results.data.content)
-    console.log(results)
+
+  async function runSearch(req) {
+    const { mode, payload, page, size } = req
+
+    const params = { page, size }
+    let response
+
+    if (mode === "ANALYST_HASH_CLASS") {
+      response = await axios.post(`${BACK_BASE_URL}/search/by-analyst-hash-classification`, payload, { params })
+    } else if (mode === "ORG_THREAT") {
+      response = await axios.post(`${BACK_BASE_URL}/search/by-organization-threat-name`, payload, { params })
+    } else {
+      return
+    }
+
+    setSearchRequest(req)
+    setResults(response.data)
+  }
+
+  async function onSearchSubmit(mode, payload) {
+    await runSearch({ mode, payload, page: 0, size: 2 })
     setOpenSearchDialog(false)
+  }
+
+  async function goToPage(nextPage) {
+    if (!searchRequest) return
+    await runSearch({ ...searchRequest, page: nextPage })
   }
 
   return (
@@ -29,31 +55,46 @@ export default function Home() {
       </Head>
       <main className={style.page}>
 
-        {!results?.length &&
-          <div className={style.descriptionWrapper}>
-            <div className={style.descriptionTitle}>{LABEL.NOTHING_HERE_TITLE}</div>
+        {!results &&
+          <div className={style.descriptionPage}>
+            <div className={style.descriptionWrapper}>
+              <div className={style.descriptionTitle}>{LABEL.NOTHING_HERE_TITLE}</div>
 
-            <div className="spacer-h-s" />
+              <div className="spacer-h-s" />
 
-            <div>{LABEL.NOTHING_HERE_DESCRIPTION}</div>
+              <div>{LABEL.NOTHING_HERE_DESCRIPTION}</div>
 
-            <div className="spacer-h-l" />
+              <div className="spacer-h-l" />
 
-            <Button
-              className={`${formStyle.button} ${formStyle.raisedButton} ${style.descriptionButton}`}
-              disableRipple
-              onClick={() => setOpenSearchDialog(true)} >
-              {LABEL.SEARCH}
-            </Button>
+              <Button
+                className={`${formStyle.button} ${formStyle.raisedButton} ${style.descriptionButton}`}
+                disableRipple
+                onClick={() => setOpenSearchDialog(true)} >
+                {LABEL.SEARCH}
+              </Button>
+            </div>
           </div>
         }
 
+        {results &&
+          <div className={style.resultsPage}>
+            <div className={style.results}>
+              {results.content?.map((doc) => (
+                <IndexInfoCard key={doc.id} item={doc} />
+              ))}
+            </div>
 
-        {results?.map((doc) => (
-          <IndexInfoCard 
-            key={doc.id} 
-            item={doc} />
-        ))}
+
+            <div className={formStyle.buttonsWrapperToRight}>
+              <Button disableRipple disabled={results.first} onClick={() => goToPage(results.number - 1)}>
+                Prev
+              </Button>
+              <Button disableRipple disabled={results.last} onClick={() => goToPage(results.number + 1)}>
+                Next
+              </Button>
+            </div>
+          </div>
+        }
 
         <DialogWithHeader
           isOpen={openSearchDialog}
@@ -62,7 +103,7 @@ export default function Home() {
           title={LABEL.SEARCH_DOCUMENTS} >
           <SearchForm
             isOpen={openSearchDialog}
-            onSearcheDone={onResponseRecieved} />
+            onSubmit={onSearchSubmit} />
         </DialogWithHeader>
 
       </main>

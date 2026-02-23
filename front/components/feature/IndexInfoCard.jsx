@@ -10,11 +10,21 @@ export default function IndexInfoCard({ item, onClick }) {
     const threat = item.malwareOrThreatName ?? "-"
 
     return (
-        <div className={style.card} onClick={() => { if (onClick) onClick(item) }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (onClick) onClick(item) } }}>
+        <div
+            className={style.card}
+            onClick={() => { if (onClick) onClick(item) }} >
             <div className={style.header}>
-                <div className={style.title} dangerouslySetInnerHTML={{ __html: analyst }} />
-                <div className={`${style.badge} ${style[`badge_${String(classification).toLowerCase()}`]}`}>{classification}</div>
+                <div
+                    className={style.title}
+                    dangerouslySetInnerHTML={{ __html: analyst }} />
+
+                <div
+                    className={`${style.badge} ${style[`badge_${String(classification).toLowerCase()}`]}`}>
+                    {classification}
+                </div>
             </div>
+
+            <div className="spacer-h-s"/>
 
             <div className={style.row}>
                 <div className={style.label}>Organization</div>

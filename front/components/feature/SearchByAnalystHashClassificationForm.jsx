@@ -4,12 +4,10 @@ import { useEffect, useMemo, useState } from 'react'
 import Chips from '../widgets/Chips'
 import { Button } from '@mui/material'
 import searchStyle from '../../styles/Search.module.css'
-import axios from 'axios'
-import { BACK_BASE_URL } from '@/values/Enviroment'
 
 export default function SearchByAnalystHashClassificationForm({
-    isOpen, 
-    onSearcheDone
+    isOpen,
+    onSubmit
 }) {
 
     const [form, setForm] = useState({
@@ -49,13 +47,13 @@ export default function SearchByAnalystHashClassificationForm({
     const setText = (key) => (e) => updateForm({ [key]: e?.target?.value ?? "" })
     const setValue = (key) => (val) => updateForm({ [key]: val })
 
-    async function search() {
-        try {
-            const response = await axios.post(`${BACK_BASE_URL}/search/by-analyst-hash-classification?page=0&size=5`, form)
-            onSearcheDone?.(response)
-        } catch (error) {
-            console.log(error)
-        }
+    function submit() {
+        if (!isFormValid) return
+        onSubmit?.({
+            forensicAnalystName: form.forensicAnalystName.trim(),
+            hash: form.hash.trim(),
+            threatClassification: form.threatClassification
+        })
     }
 
     return (
@@ -94,7 +92,7 @@ export default function SearchByAnalystHashClassificationForm({
                     className={`${style.button} ${style.raisedButton}`}
                     disableRipple
                     disabled={!isFormValid}
-                    onClick={() => search()} >
+                    onClick={() => submit()} >
                     {LABEL.SEARCH}
                 </Button>
             </div>

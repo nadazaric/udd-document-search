@@ -5,7 +5,7 @@ import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassifi
 
 export default function SearchForm({
     isOpen,
-    onSearcheDone
+    onSubmit
 }) {
 
     const options = [
@@ -48,9 +48,9 @@ export default function SearchForm({
             <div className={style.divider} />
 
             {selectedKey === "ANALYST_HASH_CLASS" &&
-                <SearchByAnalystHashClassificationForm 
+                <SearchByAnalystHashClassificationForm
                     isOpen={isOpen}
-                    onSearcheDone={(results) => onSearcheDone?.(results)} />
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }
         </div>
     )

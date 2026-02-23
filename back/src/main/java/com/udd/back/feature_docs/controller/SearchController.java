@@ -27,7 +27,7 @@ public class SearchController {
         return new ResponseEntity<>(searchService.searchByAnalystHashClassification(request, pageable), HttpStatus.OK);
     }
 
-    @GetMapping("/by-organization-threat-name")
+    @PostMapping("/by-organization-threat-name")
     public ResponseEntity<Page<SearchSimpleResponseDTO>> searchByOrganizationThreatName(
             @RequestBody @Valid SearchByOrganizationThreatNameDTO request,
             Pageable pageable
