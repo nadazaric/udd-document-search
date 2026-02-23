@@ -1,6 +1,7 @@
 package com.udd.back.feature_docs.service.impl;
 
 import com.udd.back.feature_docs.dto.SearchByAnalystHashClassificationRequestDTO;
+import com.udd.back.feature_docs.dto.SearchByOrganizationThreatNameDTO;
 import com.udd.back.feature_docs.dto.SearchSimpleResponseDTO;
 import com.udd.back.feature_docs.enumeration.Classification;
 import com.udd.back.feature_docs.service.interf.SearchService;
@@ -65,6 +66,39 @@ public class SearchServiceImpl implements SearchService {
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToResponseDTO);
     }
 
+    @Override
+    public Page<SearchSimpleResponseDTO> searchByOrganizationThreatName(
+            SearchByOrganizationThreatNameDTO req,
+            Pageable pageable
+    ) {
+        String organization = req.getCertOrganization().trim();
+        String threatName = req.getMalwareOrThreatName().trim();
+
+        BoolQuery.Builder bool = new BoolQuery.Builder();
+
+        if (isPhrase(organization)) {
+            bool.must(m -> m.matchPhrase(mp -> mp.field("certOrganization").query(stripQuotes(organization))));
+        } else {
+            bool.must(m -> m.match(mm -> mm.field("certOrganization").query(organization)));
+        }
+
+        if (isPhrase(threatName)) {
+            bool.must(m -> m.matchPhrase(mp -> mp.field("malwareOrThreatName").query(stripQuotes(threatName))));
+        } else {
+            bool.must(m -> m.match(mm -> mm.field("malwareOrThreatName").query(threatName)));
+        }
+
+        Query query = bool.build()._toQuery();
+
+        NativeQuery nativeQuery = new NativeQueryBuilder()
+                .withQuery(query)
+                .withPageable(pageable)
+                .withHighlightQuery(buildHighlightQuery(List.of("certOrganization", "malwareOrThreatName")))
+                .build();
+
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToResponseDTO);
+    }
+
     private HighlightQuery buildHighlightQuery(List<String> fields) {
         HighlightParameters params = HighlightParameters.builder()
                 .withPreTags("<em>")
@@ -99,20 +133,26 @@ public class SearchServiceImpl implements SearchService {
     private SearchSimpleResponseDTO mapToResponseDTO(SearchHit<ForensicReport> hit) {
         ForensicReport r = hit.getContent();
 
-        String highlightedAnalyst = null;
-        List<String> hl = hit.getHighlightFields().get("forensicAnalystName");
-        if (hl != null && !hl.isEmpty()) {
-            highlightedAnalyst = hl.get(0);
-        }
+        String analyst = firstHighlightOrValue(hit, "forensicAnalystName", r.getForensicAnalystName());
+        String certOrg = firstHighlightOrValue(hit, "certOrganization", r.getCertOrganization());
+        String threat = firstHighlightOrValue(hit, "malwareOrThreatName", r.getMalwareOrThreatName());
 
         return new SearchSimpleResponseDTO(
                 r.getId(),
-                highlightedAnalyst != null ? highlightedAnalyst : r.getForensicAnalystName(),
+                analyst,
                 r.getHash(),
                 Classification.valueOf(r.getThreatClassification()),
-                r.getCertOrganization(),
-                r.getMalwareOrThreatName()
+                certOrg,
+                threat
         );
+    }
+
+    private String firstHighlightOrValue(SearchHit<ForensicReport> hit, String field, String fallback) {
+        List<String> fragments = hit.getHighlightFields().get(field);
+        if (fragments != null && !fragments.isEmpty()) {
+            return fragments.get(0);
+        }
+        return fallback;
     }
 
     private boolean isPhrase(String value) {

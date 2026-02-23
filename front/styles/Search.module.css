@@ -1,0 +1,25 @@
+.page {
+    padding: var(--NavbarMargin);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.descriptionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.descriptionTitle {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.descriptionButton {
+    width: 60%;
+}

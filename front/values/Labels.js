@@ -19,5 +19,9 @@ export const LABEL = {
     MALWARE_NAME: 'Malware or Threat Name',
     HASH: 'Hash Value',
     CLASSIFICATION: 'Clasification',
-    BEHAVIOR_DESCRIPTION: 'Behavior Description'
+    BEHAVIOR_DESCRIPTION: 'Behavior Description',
+    NOTHING_HERE_TITLE: 'Nothing here yet',
+    NOTHING_HERE_DESCRIPTION: 'Search the indexed reports and review results on this page.',
+    SEARCH: 'Search',
+    SEARCH_DOCUMENTS: 'Search Documents'
 }

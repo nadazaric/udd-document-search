@@ -18,7 +18,7 @@ export default function Navbar({
                     className={`${style.option} ${selectedOption === OPTIONS.INDEXED ? style.selectedOption : ''}`}
                     href={`/`}
                     onClick={() => setSelectedOption(OPTIONS.INDEXED)} >
-                    Indexed Documents
+                    Documents
                 </Link>
 
                 <Button
@@ -27,13 +27,6 @@ export default function Navbar({
                     onClick={() => onAddNewButtonClicked?.()} >
                     Add New
                 </Button>
-
-                <Link
-                    className={`${style.option} ${selectedOption === OPTIONS.REJECTED ? style.selectedOption : ''}`}
-                    href={`/`}
-                    onClick={() => setSelectedOption(OPTIONS.REJECTED)} >
-                    Rejected Documents
-                </Link>
 
                 <Link
                     className={style.option}
