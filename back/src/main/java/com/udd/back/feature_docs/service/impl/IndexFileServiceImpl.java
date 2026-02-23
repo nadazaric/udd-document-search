@@ -1,9 +1,11 @@
 package com.udd.back.feature_docs.service.impl;
 
+import ai.djl.translate.TranslateException;
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.FileStatus;
 import com.udd.back.feature_docs.model.FileMetadata;
 import com.udd.back.feature_docs.service.interf.*;
+import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
 import com.udd.back.index.repository.FileIndexRepository;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
@@ -24,6 +26,7 @@ public class IndexFileServiceImpl implements IndexFileService {
     @Autowired GeocodingService geocodingService;
     @Autowired PdfExtractService pdfExtractService;
     @Autowired FileService fileService;
+    @Autowired VectorizationUtil vectorizationUtil;
 
     @Override
     public IndexDocumentDTO index(IndexDocumentDTO indexDocumentDTO) {
@@ -56,12 +59,18 @@ public class IndexFileServiceImpl implements IndexFileService {
         }
         forensicReport.setContent(content);
 
+        try {
+            forensicReport.setVectorizedContent(vectorizationUtil.getEmbedding(content));
+        } catch (TranslateException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, String.format("Could not calculate vector representation. File ID: %s.", indexDocumentDTO.getId()));
+        }
+
         fileMetadataService.changeStatus(indexDocumentDTO.getId(), FileStatus.CONFIRMED);
 
         fileIndexRepository.save(forensicReport);
         indexDocumentDTO.setGeocoded(true);
 
-        return  indexDocumentDTO;
+        return indexDocumentDTO;
     }
 
     @Override

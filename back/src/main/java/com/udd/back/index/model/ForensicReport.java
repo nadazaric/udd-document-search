@@ -41,7 +41,6 @@ public class ForensicReport {
     @Field(type = FieldType.Text, store = true, name = "content", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String content;
 
-    // TODO: Implement vectorization
     @Field(type = FieldType.Dense_Vector, dims = 384, similarity = "cosine", name = "vectorizedContent")
     private float[] vectorizedContent;
 
