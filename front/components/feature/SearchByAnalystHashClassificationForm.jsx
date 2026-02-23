@@ -29,12 +29,33 @@ export default function SearchByAnalystHashClassificationForm({
         { value: "CRITICAL", name: LABEL.CRITICAL_CLASSIFICATION },
     ]
 
+    // Validations 
+    
+    const [errors, setErrors] = useState({ hash: "" })
+
+    const hasQuotes = (v) => {
+        const s = String(v ?? "").trim()
+        return s.startsWith("\"") || s.endsWith("\"") || s.includes("\"")
+    }
+
+    const hasWhitespace = (v) => /\s/.test(String(v ?? ""))
+
+    const validateHash = (v) => {
+        const s = String(v ?? "").trim()
+        if (hasWhitespace(s)) return "Hash must not contain spaces."
+        if (hasQuotes(s)) return "Hash must not be in quotes."
+        return ""
+    }
+
     const isNonEmpty = (x) => String(x ?? "").trim().length > 0
+
     const isFormValid = useMemo(() => {
         if (!form) return false
+        const hashError = validateHash(form.hash)
         return (
             isNonEmpty(form.forensicAnalystName) &&
-            isNonEmpty(form.hash)
+            isNonEmpty(form.hash) &&
+            !hashError
         )
     }, [form])
 
@@ -73,8 +94,13 @@ export default function SearchByAnalystHashClassificationForm({
                     <input
                         className={style.input}
                         value={setField("hash")}
-                        onChange={setText("hash")} />
+                        onChange={(e) => {
+                            const val = e?.target?.value ?? ""
+                            updateForm({ hash: val })
+                            setErrors((prev) => ({ ...(prev ?? {}), hash: validateHash(val) }))
+                        }} />
                 </div>
+                {errors.hash ? <div className={style.inputError}>{errors.hash}</div> : null}
 
                 <div className="spacer-h-s" />
 
