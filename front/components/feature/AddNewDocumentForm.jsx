@@ -43,17 +43,17 @@ export default function AddNewDocumentForm({
                 <div>
                     <div className={style.label}>{LABEL.FORENSIC_NAME}</div>
                     <div className={`${style.inputWrapper} w-full`}>
-                        <input 
+                        <input
                             className={style.input}
                             value={setField("forensicAnalystName")}
                             onChange={setText("forensicAnalystName")} />
                     </div>
                 </div>
-                
+
                 <div>
                     <div className={style.label}>{LABEL.ORGANIZATION}</div>
                     <div className={`${style.inputWrapper} w-full`}>
-                        <input 
+                        <input
                             className={style.input}
                             value={setField("certOrganization")}
                             onChange={setText("certOrganization")} />
@@ -67,7 +67,7 @@ export default function AddNewDocumentForm({
                 <div>
                     <div className={style.label}>{LABEL.ADDRESS}</div>
                     <div className={`${style.inputWrapper} w-full`}>
-                        <input 
+                        <input
                             className={style.input}
                             value={setField("address")}
                             onChange={setText("address")} />
@@ -77,7 +77,7 @@ export default function AddNewDocumentForm({
                 <div>
                     <div className={style.label}>{LABEL.MALWARE_NAME}</div>
                     <div className={`${style.inputWrapper} w-full`}>
-                        <input 
+                        <input
                             className={style.input}
                             value={setField("malwareOrThreatName")}
                             onChange={setText("malwareOrThreatName")} />
@@ -91,7 +91,7 @@ export default function AddNewDocumentForm({
                 <div>
                     <div className={style.label}>{LABEL.HASH}</div>
                     <div className={`${style.inputWrapper} w-full`}>
-                        <input 
+                        <input
                             className={style.input}
                             value={setField("hash")}
                             onChange={setText("hash")} />
@@ -100,7 +100,7 @@ export default function AddNewDocumentForm({
 
                 <div>
                     <div className={style.label}>{LABEL.CLASSIFICATION}</div>
-                    <Chips 
+                    <Chips
                         items={CHIPS}
                         value={formData.threatClassification ?? CHIPS[0].value}
                         onChange={setValue("threatClassification")}
@@ -111,8 +111,8 @@ export default function AddNewDocumentForm({
             <div className="spacer-h-s" />
 
             <div className={style.label}>{LABEL.BEHAVIOR_DESCRIPTION}</div>
-                <div className={`${style.inputWrapper} ${style.textareaInputWrapper} w-full`}>
-                <textarea 
+            <div className={`${style.inputWrapper} ${style.textareaInputWrapper} w-full`}>
+                <textarea
                     className={style.input}
                     value={setField("behaviorDescription")}
                     onChange={setText("behaviorDescription")} />

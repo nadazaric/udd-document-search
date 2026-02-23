@@ -10,6 +10,12 @@ import SearchForm from "@/components/feature/SearchForm";
 export default function Home() {
 
     const [openSearchDialog, setOpenSearchDialog] = useState(false)
+    const [results, setResults] = useState([])
+
+    function onResponseRecieved(results) {
+        setResults(results)
+        setOpenSearchDialog(false)
+    }
 
     return (
         <>
@@ -42,7 +48,9 @@ export default function Home() {
                       width={900}
                       onCloseModal={() => setOpenSearchDialog(false)}
                       title={LABEL.SEARCH_DOCUMENTS} >
-                      <SearchForm />
+                      <SearchForm 
+                          isOpen={openSearchDialog}
+                          onSearcheDone={onResponseRecieved}/>
                   </DialogWithHeader>
                 
             </main>

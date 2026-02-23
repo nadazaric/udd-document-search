@@ -26,5 +26,18 @@
 
 .searchWrapper {
     display: grid;
-    grid-template-columns: 1.5fr 2fr;
+    grid-template-columns: 1.5fr 2px 2fr;
+    gap: 20px;
+}
+
+.divider {
+    background-color: rgba(var(--DarkGray), 0.25);
+    height: 100%;
+    width: 100%;
+}
+
+.rightWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

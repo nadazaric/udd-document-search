@@ -1,8 +1,12 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { OptionsPanel } from "../widgets/OptionsPanel"
 import style from '../../styles/Search.module.css'
+import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassificationForm"
 
-export default function SearchForm() {
+export default function SearchForm({
+    isOpen,
+    onSearcheDone
+}) {
 
     const options = [
         {
@@ -40,6 +44,14 @@ export default function SearchForm() {
                 options={options}
                 selectedKey={selectedKey}
                 onSelect={setSelectedKey} />
+
+            <div className={style.divider} />
+
+            {selectedKey === "ANALYST_HASH_CLASS" &&
+                <SearchByAnalystHashClassificationForm 
+                    isOpen={isOpen}
+                    onSearcheDone={(results) => onSearcheDone?.(results)} />
+            }
         </div>
     )
 }
