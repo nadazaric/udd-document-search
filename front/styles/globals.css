@@ -76,3 +76,7 @@ body {
   color: rgb(var(--PrimaryColor));
   opacity: 1;
 }
+
+em {
+  background-color: rgba(var(--SecondaryColor), 1);
+}
