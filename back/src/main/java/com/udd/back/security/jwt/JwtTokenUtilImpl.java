@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class JwtTokenUtilImpl implements JwtTokenUtil {
@@ -33,7 +33,7 @@ public class JwtTokenUtilImpl implements JwtTokenUtil {
         this.secret = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken() {
+    public String generateToken(String role) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
 
@@ -41,6 +41,7 @@ public class JwtTokenUtilImpl implements JwtTokenUtil {
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .signWith(secret, SignatureAlgorithm.HS256)

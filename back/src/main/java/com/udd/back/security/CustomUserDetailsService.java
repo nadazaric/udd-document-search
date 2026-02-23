@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import java.util.Collections;
 import com.udd.back.feature_auth.model.User;
 
 @Service
@@ -19,12 +19,17 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userEntity = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with this username: " + username));
-        Set<GrantedAuthority> authorities = userEntity.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toSet());
+        User userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with this username: " + username));
 
-        return new org.springframework.security.core.userdetails.User(userEntity.getUsername(), userEntity.getPassword(), authorities);
+        GrantedAuthority authority = new SimpleGrantedAuthority(userEntity.getRole().name());
+
+        return new org.springframework.security.core.userdetails.User(
+                userEntity.getUsername(),
+                userEntity.getPassword(),
+                Collections.singletonList(authority)
+        );
     }
+
 
 }

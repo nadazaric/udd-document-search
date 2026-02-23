@@ -1,3 +1,8 @@
+.label {
+    font-weight: 500;
+    margin: 0 0 5px 2px;
+    font-size: 14px;
+}
 .inputWrapper {
     width: 250px;
     border: 2px solid rgba(var(--DarkGray), 0.6);
@@ -47,7 +52,26 @@
     outline: none;
 }
 
+.textareaInputWrapper {
+    height: 75px;
+    display: grid;
+    align-items: normal;
+    padding: 5px;
+}
+
+.twoColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
 /* ------------------------------------------------------------------------------------------------------ Buttons */
+.buttonsWrapperToRight {
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+}
+
 .button {
     padding: 10px !important;
     height: var(--InputHeight) !important;
@@ -56,8 +80,6 @@
     display: flex !important;
     align-items: center !important;
     gap: 5px;
-    font-size: 14px;
-    font-weight: 500;
     border-radius: var(--BorderRadius) !important;
     border: none;
 }
@@ -66,10 +88,9 @@
     background-color: rgb(var(--PrimaryColor)) !important;
     color: white !important;
     font-weight: 600 !important;
-    transition: background-color 100ms ease-out;
-    border-radius: var(--BorderRadius);
-    padding-left: 10px;
-    padding-right: 10px;
+    transition: background-color 100ms ease-out !important;
+    border-radius: var(--BorderRadius) !important;
+    padding: 0 10px;
 }
 
 .raisedButton:hover {
@@ -81,7 +102,7 @@
 }
 
 .raisedButton:disabled {
-    background-color: rgba(var(--SecondaryColor), 0.5) !important;
+    background-color: rgba(var(--SecondaryColor), 0.8) !important;
     color: rgba(0, 0, 0, 0.5) !important;
 }
 

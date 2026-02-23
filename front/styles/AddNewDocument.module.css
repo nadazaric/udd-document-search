@@ -1,0 +1,35 @@
+.container {
+    min-height: fit-content;
+}
+
+.viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.track {
+    display: flex;
+    width: 200%;
+    transition: transform 260ms ease;
+    will-change: transform;
+}
+
+.step {
+    width: 50%;
+    flex-shrink: 0;
+}
+
+.toUpload {
+    transform: translateX(0);
+}
+
+.toForm {
+    transform: translateX(-50%);
+}
+
+.errorMessage {
+    color: rgb(var(--ErrorColor));
+    text-align: right;
+    margin-bottom: 5px;
+    font-size: 14px;
+}

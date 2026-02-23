@@ -1,8 +1,55 @@
 .wrapper{
-    width: 100%;
     height: var(--NavbarHeight);
     background-color: rgba(var(--PrimaryColor), 1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 10px;
+    border-radius: var(--BorderRadius);
+    box-shadow: var(--CardShadow);
+    padding: var(--NavbarMargin);
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  padding: 0 12px !important;     
+  line-height: 40px !important;   
+  min-height: 40px !important;
+
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-transform: capitalize !important;
+
+  text-decoration: none !important;
+  color: rgb(var(--OnPrimaryColor)) !important;
+  border-radius: var(--BorderRadius) !important;
+  letter-spacing: 0 !important;
+}
+
+.option > span,
+.option .MuiButton-startIcon,
+.option .MuiButton-endIcon {
+  display: flex !important;
+  align-items: center !important;
+}
+
+
+.option:hover {
+    background-color: rgb(var(--SecondaryColor));
+}
+
+.selectedOption {
+    background-color: rgb(var(--SecondaryColor));
+    font-weight: 600 !important;
 }

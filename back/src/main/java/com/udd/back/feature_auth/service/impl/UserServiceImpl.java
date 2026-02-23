@@ -1,10 +1,10 @@
 package com.udd.back.feature_auth.service.impl;
 
+import com.udd.back.feature_auth.UserRole;
 import com.udd.back.feature_auth.dto.LoginUserDTO;
 import com.udd.back.feature_auth.dto.RegisterUserDTO;
 import com.udd.back.feature_auth.dto.UserCredentialsDTO;
 import com.udd.back.feature_auth.model.User;
-import com.udd.back.feature_auth.repository.RoleRepository;
 import com.udd.back.feature_auth.repository.UserRepository;
 import com.udd.back.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ public class UserServiceImpl implements com.udd.back.feature_auth.service.interf
 
     @Autowired UserRepository userRepository;
     @Autowired PasswordEncoder passwordEncoder;
-    @Autowired RoleRepository roleRepository;
     @Autowired AuthenticationManager authenticationManager;
     @Autowired JwtTokenUtil jwtService;
 
@@ -47,7 +46,7 @@ public class UserServiceImpl implements com.udd.back.feature_auth.service.interf
                 dto.getUsername(),
                 dto.getEmail(),
                 passwordEncoder.encode(dto.getPassword()),
-                roleRepository.findByName("USER")
+                UserRole.USER
         );
         return userRepository.save(user);
     }
@@ -64,7 +63,7 @@ public class UserServiceImpl implements com.udd.back.feature_auth.service.interf
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("User not found: %s", username)));
 
-            String token = jwtService.generateToken();
+            String token = jwtService.generateToken(user.getRole().toString());
             return new LoginUserDTO(user.getId(), user.getUsername(), token);
         } catch (AuthenticationException e) {
             System.err.printf("Login failed - Username: %s, Reason: %s%n", dto.getUsername(), e.getClass().getSimpleName());

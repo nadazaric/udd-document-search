@@ -1,18 +1,22 @@
 import Layout from "@/components/widgets/Layout"
+import { PopupProvider } from "@/components/widgets/PopupProvider"
 import { getUserAccessToken } from "@/helpers/Auth"
 import "@/styles/globals.css"
 import axios from "axios"
 
 axios.interceptors.request.use(
-  config => {
-      const token = getUserAccessToken()
-      if (token && !config.headers['skip']) config.headers['Authorization'] = `Bearer  ${token.replace(/"/g, '')}` 
-      return config
+  (config) => {
+    if (typeof window === "undefined") return config
+
+    const token = getUserAccessToken()
+    if (token && !config.headers?.skip) {
+      config.headers.Authorization = `Bearer ${token.replace(/"/g, "")}`
+    }
+    return config
   },
-  error => {
-      Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
+
 
 axios.interceptors.response.use(
   (response) => response,
@@ -36,8 +40,10 @@ axios.interceptors.response.use(
 
 export default function App({ Component, pageProps }) {
   return (
+    <PopupProvider>
       <Layout>
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       </Layout>
+    </PopupProvider>
   )
 }

@@ -1,4 +1,6 @@
 export const SEVERITY = {
     ERROR: 'error',
-    SUCCESS: 'success'
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    INFO: 'info'
 }

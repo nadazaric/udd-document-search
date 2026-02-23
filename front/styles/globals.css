@@ -4,12 +4,17 @@
   --PrimaryColor: 61, 141, 122;
   --SecondaryColor: 179, 216, 168;
   --DarkGray: 125, 130, 120;
+  --ErrorColor: 200, 30, 30;
 
   --NavbarHeight: 60px;
+  --NavbarMargin: 10px;
   --InputHeight: 40px;
   --CardPadding: 20px;
   --CardShadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   --BorderRadius: 5px;
+
+  /* animations */
+  --DialogAnimation: 400ms;
 }
 
 * {
@@ -37,6 +42,11 @@ body {
 /* ------------------------------------------------------------------------------------------------------ Width and Hight */
 .w-full { width: 100% !important; }
 
+/* ------------------------------------------------------------------------------------------------------ Common */
+.d {
+  background-color: yellowgreen;
+}
+
 .card {
   background-color: rgba(var(--CardBackground), 1);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -48,4 +58,20 @@ body {
   font-size: 28px;
   font-weight: 600;
   color: rgba(var(--PrimaryColor), 1);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.icon {
+  opacity: 0.55;
+  transition: color 100ms ease-out;
+  cursor: pointer;
+}
+
+.icon:hover {
+  color: rgb(var(--PrimaryColor));
+  opacity: 1;
 }
