@@ -23,3 +23,8 @@
 .descriptionButton {
     width: 60%;
 }
+
+.searchWrapper {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+}

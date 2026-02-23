@@ -5,6 +5,7 @@ import formStyle from "../styles/Form.module.css"
 import { DialogWithHeader } from "@/components/widgets/Dialog";
 import { useState } from "react";
 import { LABEL } from "@/values/Labels";
+import SearchForm from "@/components/feature/SearchForm";
 
 export default function Home() {
 
@@ -38,10 +39,10 @@ export default function Home() {
 
                  <DialogWithHeader
                       isOpen={openSearchDialog}
-                      width={700}
+                      width={900}
                       onCloseModal={() => setOpenSearchDialog(false)}
                       title={LABEL.SEARCH_DOCUMENTS} >
-                          
+                      <SearchForm />
                   </DialogWithHeader>
                 
             </main>
