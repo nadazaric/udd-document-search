@@ -9,13 +9,17 @@ import SearchForm from "@/components/feature/SearchForm";
 import IndexInfoCard from "@/components/feature/IndexInfoCard";
 import axios from "axios";
 import { BACK_BASE_URL } from "@/values/Enviroment";
+import Paginator from "@/components/widgets/Paginator";
+import { usePopup } from "@/components/widgets/PopupProvider";
+import { SEVERITY } from "@/helpers/Enums";
 
 export default function Home() {
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false)
   const [searchRequest, setSearchRequest] = useState(null)
   const [results, setResults] = useState(null)
-
+  const { showPopup } = usePopup()
+  const pageSize = 9;
 
   async function runSearch(req) {
     const { mode, payload, page, size } = req
@@ -31,12 +35,19 @@ export default function Home() {
       return
     }
 
+    if (!response.data.totalElements) {
+      showPopup({
+        message: "There is no documents with this parameters.",
+        severity: SEVERITY.WARNING
+      })
+    }
+
     setSearchRequest(req)
     setResults(response.data)
   }
 
   async function onSearchSubmit(mode, payload) {
-    await runSearch({ mode, payload, page: 0, size: 2 })
+    await runSearch({ mode, payload, page: 0, size: pageSize })
     setOpenSearchDialog(false)
   }
 
@@ -84,15 +95,13 @@ export default function Home() {
               ))}
             </div>
 
+            <div className="spacer-h-m" />
 
-            <div className={formStyle.buttonsWrapperToRight}>
-              <Button disableRipple disabled={results.first} onClick={() => goToPage(results.number - 1)}>
-                Prev
-              </Button>
-              <Button disableRipple disabled={results.last} onClick={() => goToPage(results.number + 1)}>
-                Next
-              </Button>
-            </div>
+            <Paginator
+              page={results}
+              onPageChange={(nextPage) => goToPage(nextPage)}
+              additionalActionName="New Search"
+              onAdditionalActionClick={() => setOpenSearchDialog(true)} />
           </div>
         }
 

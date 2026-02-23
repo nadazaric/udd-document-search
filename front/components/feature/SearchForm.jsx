@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { OptionsPanel } from "../widgets/OptionsPanel"
 import style from '../../styles/Search.module.css'
 import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassificationForm"
@@ -7,7 +7,6 @@ export default function SearchForm({
     isOpen,
     onSubmit
 }) {
-
     const options = [
         {
             key: "ANALYST_HASH_CLASS",
@@ -37,6 +36,12 @@ export default function SearchForm({
     ]
 
     const [selectedKey, setSelectedKey] = useState(options[0].key)
+
+    useEffect(() => {
+        if (!isOpen) {
+            setSelectedKey("ANALYST_HASH_CLASS")
+        }
+    }, [isOpen])
 
     return (
         <div className={style.searchWrapper}>

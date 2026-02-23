@@ -19,7 +19,6 @@ export default function SearchByAnalystHashClassificationForm({
     useEffect(() => {
         if (!isOpen) {
             setForm({ forensicAnalystName: "", hash: "", threatClassification: "LOW" })
-            // setErrors({})
         }
     }, [isOpen])
 

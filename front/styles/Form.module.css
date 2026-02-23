@@ -3,6 +3,7 @@
     margin: 0 0 5px 2px;
     font-size: 14px;
 }
+
 .inputWrapper {
     width: 250px;
     border: 2px solid rgba(var(--DarkGray), 0.6);
@@ -13,8 +14,15 @@
     display: flex;
     align-items: center;
 }
-.inputWrapper:focus-within { border-color:  rgb(var(--PrimaryColor)); }
-.inputWrapper:hover:not(:focus-within) { border-color: rgb(var(--SecondaryColor)); }
+
+.inputWrapper:focus-within {
+    border-color: rgb(var(--PrimaryColor));
+}
+
+.inputWrapper:hover:not(:focus-within) {
+    border-color: rgb(var(--SecondaryColor));
+}
+
 .input {
     width: 100%;
     margin: 0 5px 0 5px;
@@ -23,7 +31,10 @@
     background: none;
     font-size: 14px;
 }
-.input:hover { background-color: transparent; }
+
+.input:hover {
+    background-color: transparent;
+}
 
 .inputIcon {
     opacity: 0.5;
@@ -43,7 +54,7 @@
     width: 100%;
 }
 
-.celearInput{
+.celearInput {
     border: none;
     background: none;
     padding: 0;
@@ -67,9 +78,9 @@
 
 /* ------------------------------------------------------------------------------------------------------ Buttons */
 .buttonsWrapperToRight {
-  display: flex;
-  justify-content: right;
-  gap: 10px;
+    display: flex;
+    justify-content: right;
+    gap: 10px;
 }
 
 .button {
@@ -79,9 +90,17 @@
     width: fit-content;
     display: flex !important;
     align-items: center !important;
-    gap: 5px;
+    /* gap: 5px; */
     border-radius: var(--BorderRadius) !important;
     border: none;
+}
+
+.button :global(.MuiButton-startIcon) {
+    margin-right: 4px !important;
+}
+
+.button :global(.MuiButton-endIcon) {
+    margin-left: 4px !important;
 }
 
 .raisedButton {
@@ -113,11 +132,17 @@
     transition: background-color 100ms ease-out;
     border-radius: var(--BorderRadius);
 }
-  
+
 .outlinedButton:hover {
     color: rgb(var(--SecondaryColor));
     border: solid 2px rgb(var(--SecondaryColor));
     background-color: rgb(var(--NavbarBackgroundColor));
+}
+
+.outlinedButton:disabled {
+    background-color: rgba(var(--DarkGray), 0.2) !important;
+    color: rgba(0, 0, 0, 0.5) !important;
+    border: solid 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 .reversedOutlinedButton {

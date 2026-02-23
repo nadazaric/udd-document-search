@@ -1,6 +1,6 @@
 .page {
     height: 100%;
-    padding: 0 var(--NavbarMargin) var(--NavbarMargin) var(--NavbarMargin);
+    padding: 10px 20px 20px 20px;
 }
 
 .descriptionPage {
@@ -32,7 +32,6 @@
 }
 
 .results {
-    padding: var(--NavbarMargin);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
