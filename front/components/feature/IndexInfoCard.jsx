@@ -1,3 +1,4 @@
+import { LABEL } from "@/values/Labels"
 import style from "../../styles/IndexInfoCard.module.css"
 
 export default function IndexInfoCard({ item, onClick }) {
@@ -24,20 +25,20 @@ export default function IndexInfoCard({ item, onClick }) {
                 </div>
             </div>
 
-            <div className="spacer-h-s"/>
+            <div className="spacer-h-s" />
 
             <div className={style.row}>
-                <div className={style.label}>Organization</div>
+                <div className={style.label}>{LABEL.ORGANIZATION}</div>
                 <div className={style.value} dangerouslySetInnerHTML={{ __html: org }} />
             </div>
 
             <div className={style.row}>
-                <div className={style.label}>Threat</div>
+                <div className={style.label}>{LABEL.MALWARE_NAME}</div>
                 <div className={style.value} dangerouslySetInnerHTML={{ __html: threat }} />
             </div>
 
             <div className={style.row}>
-                <div className={style.label}>Hash</div>
+                <div className={style.label}>{LABEL.HASH}</div>
                 <div className={style.mono}>{hash}</div>
             </div>
         </div>

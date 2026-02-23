@@ -3,6 +3,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import style from "../../styles/Paginator.module.css"
 import formStyle from "../../styles/Form.module.css"
+import { LABEL } from "@/values/Labels"
 
 export default function Paginator({
     page,
@@ -19,8 +20,20 @@ export default function Paginator({
     return (
         <div className={style.wrapper}>
             <div className={style.info}>
-                <div className={style.pageText}>Page <span className={style.strong}>{current}</span> of <span className={style.strong}>{totalPages}</span></div>
-                <div className={style.subText}>{totalElements} total results</div>
+                <div className={style.pageText}>
+                    {LABEL.PAGE}
+                    <span className={style.strong}>
+                        {current}
+                    </span>{LABEL.OF}
+                    <span className={style.strong}>
+                        {totalPages}
+                    </span>
+                </div>
+                
+                <div className={style.subText}>
+                    {totalElements}
+                    {LABEL.TOTAL_RESULTS}
+                </div>
             </div>
 
             <div className={style.actions}>
@@ -30,7 +43,7 @@ export default function Paginator({
                     disabled={!!page.first}
                     onClick={() => onPageChange((page.number ?? 0) - 1)}
                     startIcon={<ChevronLeftIcon />}>
-                    Prev
+                    {LABEL.PREV}
                 </Button>
 
                 <Button
@@ -39,7 +52,7 @@ export default function Paginator({
                     disabled={!!page.last}
                     onClick={() => onPageChange((page.number ?? 0) + 1)}
                     endIcon={<ChevronRightIcon />}>
-                    Next
+                    {LABEL.NEXT}
                 </Button>
 
                 {additionalActionName &&

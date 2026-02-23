@@ -16,5 +16,6 @@ export const INFO = {
     ALREADY_HAVE_ACCOUNT: 'Already Have an Account?',
     WELCOME_BACK: 'Welcome back! Log in to access your account.',
     NEW_HERE: 'New Here?',
-    CREATE_ACCOUNT: 'Create an account to get started! Sign up now and enjoy all the features.'
+    CREATE_ACCOUNT: 'Create an account to get started! Sign up now and enjoy all the features.',
+    DOCUMENTS_NOT_FOUND: 'There is no documents with this parameters.'
 }

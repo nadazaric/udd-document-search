@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { OptionsPanel } from "../widgets/OptionsPanel"
 import style from '../../styles/Search.module.css'
 import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassificationForm"
+import { SEARCH_PAGE } from "@/helpers/Enums"
+import { LABEL } from "@/values/Labels"
 
 export default function SearchForm({
     isOpen,
@@ -9,29 +11,29 @@ export default function SearchForm({
 }) {
     const options = [
         {
-            key: "ANALYST_HASH_CLASS",
-            label: "Analyst, Hash & Classification",
-            hint: "Find reports by forensic analyst, hash value, and threat classification."
+            key: SEARCH_PAGE.ANALYST_HASH_CLASS,
+            label: LABEL.ANALYST_HASH_CLASS_TITLE,
+            hint: LABEL.ANALYST_HASH_CLASS_HINT
         },
         {
-            key: "ORG_THREAT",
-            label: "Organization & Threat Name",
-            hint: "Search by CERT/CSIRT organization and analyzed malware/threat name."
+            key: SEARCH_PAGE.ORG_THREAT,
+            label: LABEL.ORG_THREAT_TITLE,
+            hint: LABEL.ORG_THREAT_HINT
         },
         {
-            key: "KNN_FREE_TEXT",
-            label: "Semantic Search (KNN)",
-            hint: "Approximate nearest-neighbor search using a free-text query."
+            key: SEARCH_PAGE.KNN_FREE_TEXT,
+            label: LABEL.KNN_FREE_TEXT_TITLE,
+            hint: LABEL.KNN_FREE_TEXT_HINT
         },
         {
-            key: "FULLTEXT_PDF",
-            label: "Report Description (Full-text)",
-            hint: "Search within the report text extracted from the PDF."
+            key: SEARCH_PAGE.FULLTEXT_PDF,
+            label: LABEL.FULLTEXT_PDF_TITLE,
+            hint: LABEL.FULLTEXT_PDF_HINT
         },
         {
-            key: "BOOLEAN_SEMI_STRUCTURED",
-            label: "Advanced Boolean Search",
-            hint: "Combine conditions with AND / OR / NOT, with C-like operator precedence."
+            key: SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED,
+            label: LABEL.BOOLEAN_SEMI_STRUCTURED_TITLE,
+            hint: LABEL.BOOLEAN_SEMI_STRUCTURED_HINT
         }
     ]
 
@@ -39,7 +41,7 @@ export default function SearchForm({
 
     useEffect(() => {
         if (!isOpen) {
-            setSelectedKey("ANALYST_HASH_CLASS")
+            setSelectedKey(SEARCH_PAGE.ANALYST_HASH_CLASS)
         }
     }, [isOpen])
 
@@ -52,7 +54,7 @@ export default function SearchForm({
 
             <div className={style.divider} />
 
-            {selectedKey === "ANALYST_HASH_CLASS" &&
+            {selectedKey === SEARCH_PAGE.ANALYST_HASH_CLASS &&
                 <SearchByAnalystHashClassificationForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
