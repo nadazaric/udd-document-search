@@ -4,6 +4,7 @@ import style from '../../styles/Search.module.css'
 import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassificationForm"
 import { SEARCH_PAGE } from "@/helpers/Enums"
 import { LABEL } from "@/values/Labels"
+import SearchByOrganizationThreatNameForm from "./SearchByIrganizationThreatNameForm"
 
 export default function SearchForm({
     isOpen,
@@ -56,6 +57,12 @@ export default function SearchForm({
 
             {selectedKey === SEARCH_PAGE.ANALYST_HASH_CLASS &&
                 <SearchByAnalystHashClassificationForm
+                    isOpen={isOpen}
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
+            }
+
+            {selectedKey === SEARCH_PAGE.ORG_THREAT &&
+                <SearchByOrganizationThreatNameForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }

@@ -9,7 +9,6 @@ export default function SearchByAnalystHashClassificationForm({
     isOpen,
     onSubmit
 }) {
-
     const [form, setForm] = useState({
         forensicAnalystName: '',
         hash: '',
@@ -59,10 +58,11 @@ export default function SearchByAnalystHashClassificationForm({
         )
     }, [form])
 
+    // Setters 
+
     const updateForm = (patch) => {
         setForm((prev) => ({ ...(prev ?? {}), ...patch }))
     }
-
     const setField = (key) => (form?.[key] ?? "")
     const setText = (key) => (e) => updateForm({ [key]: e?.target?.value ?? "" })
     const setValue = (key) => (val) => updateForm({ [key]: val })

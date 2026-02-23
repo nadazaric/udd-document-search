@@ -23,13 +23,13 @@ export default function Paginator({
                 <div className={style.pageText}>
                     {LABEL.PAGE}
                     <span className={style.strong}>
-                        {current}
+                        {totalElements ? current : 0}
                     </span>{LABEL.OF}
                     <span className={style.strong}>
                         {totalPages}
                     </span>
                 </div>
-                
+
                 <div className={style.subText}>
                     {totalElements}
                     {LABEL.TOTAL_RESULTS}
