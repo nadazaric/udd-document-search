@@ -41,4 +41,6 @@ export const LABEL = {
     FULLTEXT_PDF_HINT: 'Search within the report text extracted from the PDF.',
     BOOLEAN_SEMI_STRUCTURED_TITLE: 'Advanced Boolean Search',
     BOOLEAN_SEMI_STRUCTURED_HINT: 'Combine conditions with AND / OR / NOT, with C-like operator precedence.',
+    TEXT: 'Text',
+    DOCUMENT_DETAILS: 'Document Details'
 }

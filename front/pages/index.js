@@ -3,7 +3,7 @@ import style from "../styles/Search.module.css"
 import { Button } from "@mui/material";
 import formStyle from "../styles/Form.module.css"
 import { DialogWithHeader } from "@/components/widgets/Dialog";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LABEL } from "@/values/Labels";
 import SearchForm from "@/components/feature/SearchForm";
 import IndexInfoCard from "@/components/feature/IndexInfoCard";
@@ -13,12 +13,16 @@ import Paginator from "@/components/widgets/Paginator";
 import { usePopup } from "@/components/widgets/PopupProvider";
 import { SEARCH_PAGE, SEVERITY } from "@/helpers/Enums";
 import { INFO } from "@/values/Messages";
+import DocumentDetails from "@/components/feature/DocumentDetails";
 
 export default function Home() {
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false)
+  const [deatilsDialogOpen, setDeatilsDialogOpen] = useState(false)
+  const [selectedDocument, setSelectedDocument] = useState(null)
   const [searchRequest, setSearchRequest] = useState(null)
   const [results, setResults] = useState(null)
+  const [clickable, setClickable] = useState(false)
   const { showPopup } = usePopup()
   const pageSize = 9;
 
@@ -30,8 +34,13 @@ export default function Home() {
 
     if (mode === SEARCH_PAGE.ANALYST_HASH_CLASS) {
       response = await axios.post(`${BACK_BASE_URL}/search/by-analyst-hash-classification`, payload, { params })
+      setClickable(false)
     } else if (mode === SEARCH_PAGE.ORG_THREAT) {
       response = await axios.post(`${BACK_BASE_URL}/search/by-organization-threat-name`, payload, { params })
+      setClickable(false)
+    } else if (mode === SEARCH_PAGE.KNN_FREE_TEXT) {
+      response = await axios.post(`${BACK_BASE_URL}/search/knn`, payload, { params })
+      setClickable(true)
     } else {
       return
     }
@@ -55,6 +64,11 @@ export default function Home() {
   async function goToPage(nextPage) {
     if (!searchRequest) return
     await runSearch({ ...searchRequest, page: nextPage })
+  }
+
+  function openDetailsDialog(item) {
+    setDeatilsDialogOpen(true)
+    setSelectedDocument(item)
   }
 
   return (
@@ -91,7 +105,11 @@ export default function Home() {
           <div className={style.resultsPage}>
             <div className={style.results}>
               {results.content?.map((doc) => (
-                <IndexInfoCard key={doc.id} item={doc} />
+                <IndexInfoCard
+                  key={doc.id}
+                  item={doc}
+                  isClickable={clickable}
+                  onClick={openDetailsDialog} />
               ))}
             </div>
 
@@ -113,6 +131,18 @@ export default function Home() {
           <SearchForm
             isOpen={openSearchDialog}
             onSubmit={onSearchSubmit} />
+        </DialogWithHeader>
+
+        <DialogWithHeader
+          isOpen={deatilsDialogOpen}
+          width={700}
+          onCloseModal={() => {
+            setDeatilsDialogOpen(false)
+            setSelectedDocument(null)
+          }}
+          title={LABEL.DOCUMENT_DETAILS} >
+            <DocumentDetails 
+              document={selectedDocument} />
         </DialogWithHeader>
 
       </main>

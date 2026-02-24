@@ -3,12 +3,14 @@
     border-radius: var(--BorderRadius);
     background: rgba(var(--DarkGray), 0.1);
     border: 1px solid rgba(0, 0, 0, 0.06);
-    transition: transform 140ms ease, box-shadow 180ms ease, background-color 180ms ease;
-    cursor: pointer;
-    outline: none;
 }
 
-.card:hover {
+.clickableCard {
+    transition: transform 140ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    cursor: pointer;
+}
+
+.clickableCard:hover {
     background: rgba(var(--DarkGray), 0.15);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }

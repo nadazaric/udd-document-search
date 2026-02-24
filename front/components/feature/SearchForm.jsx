@@ -5,6 +5,7 @@ import SearchByAnalystHashClassificationForm from "./SearchByAnalystHashClassifi
 import { SEARCH_PAGE } from "@/helpers/Enums"
 import { LABEL } from "@/values/Labels"
 import SearchByOrganizationThreatNameForm from "./SearchByIrganizationThreatNameForm"
+import SearchKnnForm from "./SearchKnnForm"
 
 export default function SearchForm({
     isOpen,
@@ -63,6 +64,12 @@ export default function SearchForm({
 
             {selectedKey === SEARCH_PAGE.ORG_THREAT &&
                 <SearchByOrganizationThreatNameForm
+                    isOpen={isOpen}
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
+            }
+
+            {selectedKey === SEARCH_PAGE.KNN_FREE_TEXT &&
+                <SearchKnnForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }

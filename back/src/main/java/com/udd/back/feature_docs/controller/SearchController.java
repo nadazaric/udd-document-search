@@ -1,9 +1,6 @@
 package com.udd.back.feature_docs.controller;
 
-import com.udd.back.feature_docs.dto.SearchByAnalystHashClassificationRequestDTO;
-import com.udd.back.feature_docs.dto.SearchByOrganizationThreatNameDTO;
-import com.udd.back.feature_docs.dto.SearchKnnRequestDTO;
-import com.udd.back.feature_docs.dto.SearchSimpleResponseDTO;
+import com.udd.back.feature_docs.dto.*;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,7 @@ public class SearchController {
     SearchService searchService;
 
     @PostMapping("/by-analyst-hash-classification")
-    public ResponseEntity<Page<SearchSimpleResponseDTO>> searchByAnalystHashClassification(
+    public ResponseEntity<Page<SearchBaseResponseDTO>> searchByAnalystHashClassification(
             @RequestBody @Valid SearchByAnalystHashClassificationRequestDTO request,
             Pageable pageable
     ) {
@@ -29,7 +26,7 @@ public class SearchController {
     }
 
     @PostMapping("/by-organization-threat-name")
-    public ResponseEntity<Page<SearchSimpleResponseDTO>> searchByOrganizationThreatName(
+    public ResponseEntity<Page<SearchBaseResponseDTO>> searchByOrganizationThreatName(
             @RequestBody @Valid SearchByOrganizationThreatNameDTO request,
             Pageable pageable
     ) {
@@ -37,7 +34,7 @@ public class SearchController {
     }
 
     @PostMapping("/knn")
-    public Page<SearchSimpleResponseDTO> knnSearch(
+    public Page<SearchKnnResponseDTO> knnSearch(
             @Valid @RequestBody SearchKnnRequestDTO request,
             Pageable pageable
     ) {

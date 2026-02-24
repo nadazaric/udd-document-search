@@ -4,7 +4,7 @@ import com.udd.back.feature_docs.enumeration.Classification;
 
 import java.util.UUID;
 
-public class SearchSimpleResponseDTO {
+public class SearchBaseResponseDTO {
 
     private UUID id;
     private String forensicAnalystName;
@@ -12,18 +12,20 @@ public class SearchSimpleResponseDTO {
     private Classification threatClassification;
     private String certOrganization;
     private String malwareOrThreatName;
+    private String address;
 
-    public  SearchSimpleResponseDTO() {
+    public SearchBaseResponseDTO() {
 
     }
 
-    public SearchSimpleResponseDTO(UUID id, String forensicAnalystName, String hash, Classification threatClassification, String certOrganization, String malwareOrThreatName) {
+    public SearchBaseResponseDTO(UUID id, String forensicAnalystName, String hash, Classification threatClassification, String certOrganization, String malwareOrThreatName, String address) {
         this.id = id;
         this.forensicAnalystName = forensicAnalystName;
         this.hash = hash;
         this.threatClassification = threatClassification;
         this.certOrganization = certOrganization;
         this.malwareOrThreatName = malwareOrThreatName;
+        this.address = address;
     }
 
     public UUID getId() {
@@ -73,4 +75,13 @@ public class SearchSimpleResponseDTO {
     public void setMalwareOrThreatName(String malwareOrThreatName) {
         this.malwareOrThreatName = malwareOrThreatName;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

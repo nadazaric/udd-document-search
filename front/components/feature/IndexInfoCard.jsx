@@ -1,19 +1,24 @@
 import { LABEL } from "@/values/Labels"
-import style from "../../styles/IndexInfoCard.module.css"
+import style from "../../styles/DocumentInformation.module.css"
 
-export default function IndexInfoCard({ item, onClick }) {
+export default function IndexInfoCard({ 
+    item,
+    isClickable, 
+    onClick
+}) {
     if (!item) return null
 
     const analyst = item.forensicAnalystName ?? "-"
     const hash = item.hash ?? "-"
+    const address = item.address ?? '-'
     const classification = item.threatClassification ?? "-"
     const org = item.certOrganization ?? "-"
     const threat = item.malwareOrThreatName ?? "-"
 
     return (
         <div
-            className={style.card}
-            onClick={() => { if (onClick) onClick(item) }} >
+            className={`${style.card} ${isClickable ? style.clickableCard : ''}`}
+            onClick={(e) => { if (isClickable) onClick(item) }} >
             <div className={style.header}>
                 <div
                     className={style.title}
@@ -33,6 +38,11 @@ export default function IndexInfoCard({ item, onClick }) {
             </div>
 
             <div className={style.row}>
+                <div className={style.label}>{LABEL.ADDRESS}</div>
+                <div className={style.value} >{address}</div>
+            </div>
+
+            <div className={style.row}>
                 <div className={style.label}>{LABEL.MALWARE_NAME}</div>
                 <div className={style.value} dangerouslySetInnerHTML={{ __html: threat }} />
             </div>
@@ -41,6 +51,7 @@ export default function IndexInfoCard({ item, onClick }) {
                 <div className={style.label}>{LABEL.HASH}</div>
                 <div className={style.mono}>{hash}</div>
             </div>
+
         </div>
     )
 }

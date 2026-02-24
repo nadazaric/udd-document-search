@@ -2,22 +2,17 @@ package com.udd.back.feature_docs.service.impl;
 
 import ai.djl.translate.TranslateException;
 import co.elastic.clients.elasticsearch._types.KnnQuery;
-import com.udd.back.feature_docs.dto.SearchByAnalystHashClassificationRequestDTO;
-import com.udd.back.feature_docs.dto.SearchByOrganizationThreatNameDTO;
-import com.udd.back.feature_docs.dto.SearchKnnRequestDTO;
-import com.udd.back.feature_docs.dto.SearchSimpleResponseDTO;
+import com.udd.back.feature_docs.dto.*;
 import com.udd.back.feature_docs.enumeration.Classification;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.highlight.Highlight;
 import org.springframework.data.elasticsearch.core.query.highlight.HighlightField;
@@ -32,7 +27,6 @@ import org.springframework.data.elasticsearch.core.query.HighlightQuery;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,7 +43,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Page<SearchSimpleResponseDTO> searchByAnalystHashClassification(
+    public Page<SearchBaseResponseDTO> searchByAnalystHashClassification(
             SearchByAnalystHashClassificationRequestDTO req,
             Pageable pageable
     ) {
@@ -75,11 +69,11 @@ public class SearchServiceImpl implements SearchService {
                 .withHighlightQuery(buildHighlightQuery(List.of("forensicAnalystName")))
                 .build();
 
-        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToResponseDTO);
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBaseResponseDTO);
     }
 
     @Override
-    public Page<SearchSimpleResponseDTO> searchByOrganizationThreatName(
+    public Page<SearchBaseResponseDTO> searchByOrganizationThreatName(
             SearchByOrganizationThreatNameDTO req,
             Pageable pageable
     ) {
@@ -108,11 +102,11 @@ public class SearchServiceImpl implements SearchService {
                 .withHighlightQuery(buildHighlightQuery(List.of("certOrganization", "malwareOrThreatName")))
                 .build();
 
-        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToResponseDTO);
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBaseResponseDTO);
     }
 
     @Override
-    public Page<SearchSimpleResponseDTO> searchKnn(SearchKnnRequestDTO req, Pageable pageable) {
+    public Page<SearchKnnResponseDTO> searchKnn(SearchKnnRequestDTO req, Pageable pageable) {
         try {
             float[] queryVector = vectorizationUtil.getEmbedding(req.getText());
 
@@ -142,10 +136,10 @@ public class SearchServiceImpl implements SearchService {
 
             int from = page * size;
 
-            List<SearchSimpleResponseDTO> content = hits.getSearchHits().stream()
+            List<SearchKnnResponseDTO> content = hits.getSearchHits().stream()
                     .skip(from)
                     .limit(size)
-                    .map(this::mapToResponseDTO)
+                    .map(this::mapToKnnResponseDTO)
                     .toList();
 
             long pseudoTotal = Math.max(from + content.size(), k);
@@ -188,21 +182,29 @@ public class SearchServiceImpl implements SearchService {
         return new PageImpl<>(content, pageable, hits.getTotalHits());
     }
 
-    private SearchSimpleResponseDTO mapToResponseDTO(SearchHit<ForensicReport> hit) {
+    private SearchBaseResponseDTO mapToBaseResponseDTO(SearchHit<ForensicReport> hit) {
         ForensicReport r = hit.getContent();
 
         String analyst = firstHighlightOrValue(hit, "forensicAnalystName", r.getForensicAnalystName());
         String certOrg = firstHighlightOrValue(hit, "certOrganization", r.getCertOrganization());
         String threat = firstHighlightOrValue(hit, "malwareOrThreatName", r.getMalwareOrThreatName());
 
-        return new SearchSimpleResponseDTO(
+        return new SearchBaseResponseDTO(
                 r.getId(),
                 analyst,
                 r.getHash(),
                 Classification.valueOf(r.getThreatClassification()),
                 certOrg,
-                threat
+                threat,
+                r.getAddress()
         );
+    }
+
+    private SearchKnnResponseDTO mapToKnnResponseDTO(SearchHit<ForensicReport> hit) {
+        SearchKnnResponseDTO response = new SearchKnnResponseDTO(mapToBaseResponseDTO(hit));
+        response.setScore(hit.getScore());
+        response.setBehaviorDescription(hit.getContent().getBehaviorDescription());
+        return response;
     }
 
     private String firstHighlightOrValue(SearchHit<ForensicReport> hit, String field, String fallback) {
