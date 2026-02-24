@@ -1,9 +1,9 @@
 import { LABEL } from "@/values/Labels"
 import style from "../../styles/DocumentInformation.module.css"
 
-export default function IndexInfoCard({ 
+export default function IndexInfoCard({
     item,
-    isClickable, 
+    isClickable,
     onClick
 }) {
     if (!item) return null
@@ -14,6 +14,7 @@ export default function IndexInfoCard({
     const classification = item.threatClassification ?? "-"
     const org = item.certOrganization ?? "-"
     const threat = item.malwareOrThreatName ?? "-"
+    const score = parseFloat(item.score).toFixed(2) ?? null
 
     return (
         <div
@@ -24,9 +25,17 @@ export default function IndexInfoCard({
                     className={style.title}
                     dangerouslySetInnerHTML={{ __html: analyst }} />
 
-                <div
-                    className={`${style.badge} ${style[`badge_${String(classification).toLowerCase()}`]}`}>
-                    {classification}
+                <div className={style.badgesWrapper}>
+                    {score &&
+                        <div
+                            className={`${style.badge} ${style.badgeNeutral}`}>
+                            {score}
+                        </div>
+                    }
+                    <div
+                        className={`${style.badge} ${style[`badge_${String(classification).toLowerCase()}`]}`}>
+                        {classification}
+                    </div>
                 </div>
             </div>
 
