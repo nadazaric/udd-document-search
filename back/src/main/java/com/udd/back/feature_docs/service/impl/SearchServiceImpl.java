@@ -66,7 +66,7 @@ public class SearchServiceImpl implements SearchService {
         NativeQuery nativeQuery = new NativeQueryBuilder()
                 .withQuery(query)
                 .withPageable(pageable)
-                .withHighlightQuery(buildHighlightQuery(List.of("forensicAnalystName")))
+                .withHighlightQuery(buildHighlightQuery(List.of("forensicAnalystName"), null))
                 .build();
 
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBaseResponseDTO);
@@ -99,16 +99,16 @@ public class SearchServiceImpl implements SearchService {
         NativeQuery nativeQuery = new NativeQueryBuilder()
                 .withQuery(query)
                 .withPageable(pageable)
-                .withHighlightQuery(buildHighlightQuery(List.of("certOrganization", "malwareOrThreatName")))
+                .withHighlightQuery(buildHighlightQuery(List.of("certOrganization", "malwareOrThreatName"), null))
                 .build();
 
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBaseResponseDTO);
     }
 
     @Override
-    public Page<SearchKnnResponseDTO> searchKnn(SearchKnnRequestDTO req, Pageable pageable) {
+    public Page<SearchKnnResponseDTO> searchKnn(SearchTextRequestDTO req, Pageable pageable) {
         try {
-            float[] queryVector = vectorizationUtil.getEmbedding(req.getText());
+            float[] queryVector = vectorizationUtil.getEmbedding(req.getText().trim());
 
             List<Float> queryVectorList = new ArrayList<>(queryVector.length);
             for (float v : queryVector) queryVectorList.add(v);
@@ -151,11 +151,35 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private HighlightQuery buildHighlightQuery(List<String> fields) {
-        HighlightParameters params = HighlightParameters.builder()
-                .withPreTags("<em>")
-                .withPostTags("</em>")
+    @Override
+    public Page<SearchContentResponse> searchFullText(SearchTextRequestDTO req, Pageable pageable) {
+        String text = req.getText().trim();
+
+        BoolQuery.Builder bool = new BoolQuery.Builder();
+
+        bool.should(sb -> sb.match(m -> m.field("content").query(text)));
+
+        Query query = bool.build()._toQuery();
+
+        NativeQuery nativeQuery = new NativeQueryBuilder()
+                .withQuery(query)
+                .withPageable(pageable)
+                .withHighlightQuery(buildHighlightQuery(List.of("content"), 200))
                 .build();
+
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToContentDTO);
+    }
+
+    private HighlightQuery buildHighlightQuery(List<String> fields, Integer fragmentSize) {
+        HighlightParameters.HighlightParametersBuilder paramsBuilder = HighlightParameters.builder()
+                .withPreTags("<em>")
+                .withPostTags("</em>");
+
+        if (fragmentSize != null) {
+            paramsBuilder.withFragmentSize(fragmentSize);
+        }
+
+        HighlightParameters params = paramsBuilder.build();
 
         List<HighlightField> highlightFields = new ArrayList<>();
         fields.forEach(field -> {
@@ -198,6 +222,12 @@ public class SearchServiceImpl implements SearchService {
                 threat,
                 r.getAddress()
         );
+    }
+
+    private SearchContentResponse mapToContentDTO(SearchHit<ForensicReport> hit) {
+        SearchContentResponse response = new SearchContentResponse(mapToBaseResponseDTO(hit));
+        response.setContentHighlights(hit.getHighlightField("content"));
+        return response;
     }
 
     private SearchKnnResponseDTO mapToKnnResponseDTO(SearchHit<ForensicReport> hit) {

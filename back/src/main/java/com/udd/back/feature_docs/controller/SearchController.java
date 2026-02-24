@@ -34,11 +34,19 @@ public class SearchController {
     }
 
     @PostMapping("/knn")
-    public Page<SearchKnnResponseDTO> knnSearch(
-            @Valid @RequestBody SearchKnnRequestDTO request,
+    public ResponseEntity<Page<SearchKnnResponseDTO>> knnSearch(
+            @Valid @RequestBody SearchTextRequestDTO request,
             Pageable pageable
     ) {
-        return searchService.searchKnn(request, pageable);
+        return new ResponseEntity<>(searchService.searchKnn(request, pageable), HttpStatus.OK);
+    }
+
+    @PostMapping("/full-text")
+    public ResponseEntity<Page<SearchContentResponse>> fullTextSearch(
+            @Valid @RequestBody SearchTextRequestDTO request,
+            Pageable pageable
+    ) {
+        return new ResponseEntity<>(searchService.searchFullText(request, pageable), HttpStatus.OK);
     }
 
 }

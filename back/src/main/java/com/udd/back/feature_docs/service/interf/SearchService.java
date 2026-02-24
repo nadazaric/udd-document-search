@@ -10,6 +10,8 @@ public interface SearchService {
 
     Page<SearchBaseResponseDTO> searchByOrganizationThreatName(SearchByOrganizationThreatNameDTO req, Pageable pageable);
 
-    Page<SearchKnnResponseDTO> searchKnn(SearchKnnRequestDTO req, Pageable pageable);
+    Page<SearchKnnResponseDTO> searchKnn(SearchTextRequestDTO req, Pageable pageable);
+
+    Page<SearchContentResponse> searchFullText(SearchTextRequestDTO req, Pageable pageable);
 
 }

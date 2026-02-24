@@ -2,7 +2,7 @@ package com.udd.back.feature_docs.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class SearchKnnRequestDTO {
+public class SearchTextRequestDTO {
     @NotBlank
     private String text;
 
