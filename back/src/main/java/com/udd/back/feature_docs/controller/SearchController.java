@@ -2,6 +2,7 @@ package com.udd.back.feature_docs.controller;
 
 import com.udd.back.feature_docs.dto.SearchByAnalystHashClassificationRequestDTO;
 import com.udd.back.feature_docs.dto.SearchByOrganizationThreatNameDTO;
+import com.udd.back.feature_docs.dto.SearchKnnRequestDTO;
 import com.udd.back.feature_docs.dto.SearchSimpleResponseDTO;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import jakarta.validation.Valid;
@@ -33,6 +34,14 @@ public class SearchController {
             Pageable pageable
     ) {
         return new ResponseEntity<>(searchService.searchByOrganizationThreatName(request, pageable), HttpStatus.OK);
+    }
+
+    @PostMapping("/knn")
+    public Page<SearchSimpleResponseDTO> knnSearch(
+            @Valid @RequestBody SearchKnnRequestDTO request,
+            Pageable pageable
+    ) {
+        return searchService.searchKnn(request, pageable);
     }
 
 }

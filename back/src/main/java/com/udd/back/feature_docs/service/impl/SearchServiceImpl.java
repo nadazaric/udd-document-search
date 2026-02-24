@@ -1,34 +1,46 @@
 package com.udd.back.feature_docs.service.impl;
 
+import ai.djl.translate.TranslateException;
+import co.elastic.clients.elasticsearch._types.KnnQuery;
 import com.udd.back.feature_docs.dto.SearchByAnalystHashClassificationRequestDTO;
 import com.udd.back.feature_docs.dto.SearchByOrganizationThreatNameDTO;
+import com.udd.back.feature_docs.dto.SearchKnnRequestDTO;
 import com.udd.back.feature_docs.dto.SearchSimpleResponseDTO;
 import com.udd.back.feature_docs.enumeration.Classification;
 import com.udd.back.feature_docs.service.interf.SearchService;
+import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.highlight.Highlight;
 import org.springframework.data.elasticsearch.core.query.highlight.HighlightField;
 import org.springframework.data.elasticsearch.core.query.highlight.HighlightParameters;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.HighlightQuery;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class SearchServiceImpl implements SearchService {
+
+    @Autowired VectorizationUtil vectorizationUtil;
 
     private final ElasticsearchOperations elasticsearchTemplate;
 
@@ -97,6 +109,52 @@ public class SearchServiceImpl implements SearchService {
                 .build();
 
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToResponseDTO);
+    }
+
+    @Override
+    public Page<SearchSimpleResponseDTO> searchKnn(SearchKnnRequestDTO req, Pageable pageable) {
+        try {
+            float[] queryVector = vectorizationUtil.getEmbedding(req.getText());
+
+            List<Float> queryVectorList = new ArrayList<>(queryVector.length);
+            for (float v : queryVector) queryVectorList.add(v);
+
+            int page = pageable.getPageNumber();
+            int size = pageable.getPageSize();
+
+            int k = Math.max(1, (page + 1) * size);
+            long numCandidates = Math.max(100L, (long) k * 10L);
+
+            var knnQuery = new KnnQuery.Builder()
+                    .field("vectorizedContent")
+                    .queryVector(queryVectorList)
+                    .k(k)
+                    .numCandidates(numCandidates)
+                    .build();
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withKnnQuery(knnQuery)
+                    .withMaxResults(k)
+                    .withSearchType(null)
+                    .build();
+
+            SearchHits<ForensicReport> hits = elasticsearchTemplate.search(searchQuery, ForensicReport.class);
+
+            int from = page * size;
+
+            List<SearchSimpleResponseDTO> content = hits.getSearchHits().stream()
+                    .skip(from)
+                    .limit(size)
+                    .map(this::mapToResponseDTO)
+                    .toList();
+
+            long pseudoTotal = Math.max(from + content.size(), k);
+
+            return new PageImpl<>(content, pageable, pseudoTotal);
+
+        } catch (TranslateException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Vectorization failed");
+        }
     }
 
     private HighlightQuery buildHighlightQuery(List<String> fields) {
