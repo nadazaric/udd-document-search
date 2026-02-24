@@ -6,6 +6,7 @@ import { SEARCH_PAGE } from "@/helpers/Enums"
 import { LABEL } from "@/values/Labels"
 import SearchByOrganizationThreatNameForm from "./SearchByIrganizationThreatNameForm"
 import SearchKnnForm from "./SearchKnnForm"
+import SearchFullTextForm from "./SearchFullTextForm"
 
 export default function SearchForm({
     isOpen,
@@ -70,6 +71,12 @@ export default function SearchForm({
 
             {selectedKey === SEARCH_PAGE.KNN_FREE_TEXT &&
                 <SearchKnnForm
+                    isOpen={isOpen}
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
+            }
+
+            {selectedKey === SEARCH_PAGE.FULLTEXT_PDF &&
+                <SearchFullTextForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }

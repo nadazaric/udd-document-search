@@ -6,6 +6,20 @@ export default function DocumentDetails({ document }) {
 
     const behavior = document?.behaviorDescription ?? null
 
+    function normalizeSnippet(html) {
+        if (!html) return "";
+
+        let s = html;
+
+        s = s.replace(/\r?\n\s*\r?\n/g, "<br/><br/>");
+
+        s = s.replace(/\r?\n/g, " ");
+
+        s = s.replace(/[ \t]{2,}/g, " ").trim();
+
+        return s;
+    }
+
     return (
         <div className={style.wrapper}>
             <IndexInfoCard
@@ -21,6 +35,19 @@ export default function DocumentDetails({ document }) {
                     <div className={style.paragraph}>{behavior}</div>
                 </div>
             }
+
+            {document?.contentHighlights?.map((item) => (
+                <div>
+                    <div className={style.card}>
+                        <div
+                            className={style.highlightBox}
+                            // dangerouslySetInnerHTML={{ __html: normalizeSnippet(item) }}
+                            dangerouslySetInnerHTML={{ __html: item }} />
+                    </div>
+
+                    <div className="spacer-h-s" />
+                </div>
+            ))}
 
         </div>
     )

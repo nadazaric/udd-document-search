@@ -41,7 +41,10 @@ export default function Home() {
     } else if (mode === SEARCH_PAGE.KNN_FREE_TEXT) {
       response = await axios.post(`${BACK_BASE_URL}/search/knn`, payload, { params })
       setClickable(true)
-    } else {
+    } else if (mode === SEARCH_PAGE.FULLTEXT_PDF) {
+      response = await axios.post(`${BACK_BASE_URL}/search/full-text`, payload, { params })
+      setClickable(true)
+    }  else {
       return
     }
 

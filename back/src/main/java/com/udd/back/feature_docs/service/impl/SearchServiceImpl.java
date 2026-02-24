@@ -157,7 +157,11 @@ public class SearchServiceImpl implements SearchService {
 
         BoolQuery.Builder bool = new BoolQuery.Builder();
 
-        bool.should(sb -> sb.match(m -> m.field("content").query(text)));
+        if (isPhrase(text)) {
+            bool.should(sb -> sb.matchPhrase(m -> m.field("content").query(stripQuotes(text))));
+        } else {
+            bool.should(sb -> sb.match(m -> m.field("content").query(text)));
+        }
 
         Query query = bool.build()._toQuery();
 

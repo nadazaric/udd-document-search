@@ -1,9 +1,13 @@
 package com.udd.back.feature_docs.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class SearchByOrganizationThreatNameDTO {
 
+    @NotBlank
     private String certOrganization;
 
+    @NotBlank
     private String malwareOrThreatName;
 
     public SearchByOrganizationThreatNameDTO() {
