@@ -14,7 +14,7 @@ export default function IndexInfoCard({
     const classification = item.threatClassification ?? "-"
     const org = item.certOrganization ?? "-"
     const threat = item.malwareOrThreatName ?? "-"
-    const score = parseFloat(item.score).toFixed(2) ?? null
+    const score = item.score ? parseFloat(item.score).toFixed(2) : null
 
     return (
         <div
