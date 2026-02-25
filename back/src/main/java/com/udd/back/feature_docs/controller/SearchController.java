@@ -57,4 +57,12 @@ public class SearchController {
         return new ResponseEntity<>(searchService.combineBoolean(request, pageable), HttpStatus.OK);
     }
 
+    @PostMapping("/by-location")
+    public ResponseEntity<Page<SearchBaseResponseDTO>> searchByLocation(
+            @Valid @RequestBody SearchByLocationRequestDTO request,
+            Pageable pageable
+    ) {
+        return new ResponseEntity<>(searchService.searchByAddress(request, pageable), HttpStatus.OK);
+    }
+
 }
