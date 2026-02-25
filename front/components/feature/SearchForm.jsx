@@ -8,6 +8,7 @@ import SearchByOrganizationThreatNameForm from "./SearchByIrganizationThreatName
 import SearchKnnForm from "./SearchKnnForm"
 import SearchFullTextForm from "./SearchFullTextForm"
 import SearchCombinedBooleanForm from "./SearchCombinedBooleanForm"
+import SearchByLocationForm from "./SearchByLocationForm"
 
 export default function SearchForm({
     isOpen,
@@ -38,6 +39,11 @@ export default function SearchForm({
             key: SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED,
             label: LABEL.BOOLEAN_SEMI_STRUCTURED_TITLE,
             hint: LABEL.BOOLEAN_SEMI_STRUCTURED_HINT
+        },
+        {
+            key: SEARCH_PAGE.LOCATION,
+            label: LABEL.LOCATION_SEARCH_TITLE,
+            hint: LABEL.LOCATION_SEARCH_HINT
         }
     ]
 
@@ -84,6 +90,12 @@ export default function SearchForm({
 
             {selectedKey === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED &&
                 <SearchCombinedBooleanForm
+                    isOpen={isOpen}
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
+            }
+
+            {selectedKey === SEARCH_PAGE.LOCATION &&
+                <SearchByLocationForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }

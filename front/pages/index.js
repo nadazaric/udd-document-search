@@ -3,7 +3,7 @@ import style from "../styles/Search.module.css"
 import { Button } from "@mui/material";
 import formStyle from "../styles/Form.module.css"
 import { DialogWithHeader } from "@/components/widgets/Dialog";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { LABEL } from "@/values/Labels";
 import SearchForm from "@/components/feature/SearchForm";
 import IndexInfoCard from "@/components/feature/IndexInfoCard";
@@ -12,7 +12,7 @@ import { BACK_BASE_URL } from "@/values/Enviroment";
 import Paginator from "@/components/widgets/Paginator";
 import { usePopup } from "@/components/widgets/PopupProvider";
 import { SEARCH_PAGE, SEVERITY } from "@/helpers/Enums";
-import { INFO } from "@/values/Messages";
+import { ERROR, INFO } from "@/values/Messages";
 import DocumentDetails from "@/components/feature/DocumentDetails";
 
 export default function Home() {
@@ -26,40 +26,53 @@ export default function Home() {
   const { showPopup } = usePopup()
   const pageSize = 9;
 
+  function generateUrl(mode) {
+    if (mode === SEARCH_PAGE.ANALYST_HASH_CLASS) return "by-analyst-hash-classification"
+    if (mode === SEARCH_PAGE.ORG_THREAT) return "by-organization-threat-name"
+    if (mode === SEARCH_PAGE.KNN_FREE_TEXT) return "knn"
+    if (mode === SEARCH_PAGE.FULLTEXT_PDF) return "full-text"
+    if (mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED) return "boolean"
+    return "by-location"
+  }
+
+  function isClickableMode(mode) {
+    return (
+      mode === SEARCH_PAGE.KNN_FREE_TEXT ||
+      mode === SEARCH_PAGE.FULLTEXT_PDF ||
+      mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED
+    )
+  }
+
   async function runSearch(req) {
     const { mode, payload, page, size } = req
-
     const params = { page, size }
-    let response
 
-    if (mode === SEARCH_PAGE.ANALYST_HASH_CLASS) {
-      response = await axios.post(`${BACK_BASE_URL}/search/by-analyst-hash-classification`, payload, { params })
-      setClickable(false)
-    } else if (mode === SEARCH_PAGE.ORG_THREAT) {
-      response = await axios.post(`${BACK_BASE_URL}/search/by-organization-threat-name`, payload, { params })
-      setClickable(false)
-    } else if (mode === SEARCH_PAGE.KNN_FREE_TEXT) {
-      response = await axios.post(`${BACK_BASE_URL}/search/knn`, payload, { params })
-      setClickable(true)
-    } else if (mode === SEARCH_PAGE.FULLTEXT_PDF) {
-      response = await axios.post(`${BACK_BASE_URL}/search/full-text`, payload, { params })
-      setClickable(true)
-    } else if (mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED) {
-      response = await axios.post(`${BACK_BASE_URL}/search/boolean`, payload, { params })
-      setClickable(true)
-    } else {
-      return
-    }
+    setClickable(isClickableMode(mode))
 
-    if (!response.data.totalElements) {
+    try {
+      const response = await axios.post(`${BACK_BASE_URL}/search/${generateUrl(mode)}`, payload, { params })
+
+      if (!response.data.totalElements) {
+        showPopup({ message: INFO.DOCUMENTS_NOT_FOUND, severity: SEVERITY.WARNING })
+      }
+
+      setSearchRequest(req)
+      setResults(response.data)
+
+    } catch (error) {
+      const status = error?.response?.status
+
       showPopup({
-        message: INFO.DOCUMENTS_NOT_FOUND,
-        severity: SEVERITY.WARNING
+        message: status === 400
+          ? ERROR.WRONG_PARAMETERS
+          : status === 422
+            ? ERROR.ADDRESS_NOT_FOUND
+            : ERROR.SERVER,
+        severity: SEVERITY.ERROR
       })
-    }
 
-    setSearchRequest(req)
-    setResults(response.data)
+      setResults({ content: [], totalElements: 0, totalPages: 0, first: true, last:true, number: 0})
+    }
   }
 
   async function onSearchSubmit(mode, payload) {
@@ -148,8 +161,8 @@ export default function Home() {
             setSelectedDocument(null)
           }}
           title={LABEL.DOCUMENT_DETAILS} >
-            <DocumentDetails 
-              document={selectedDocument} />
+          <DocumentDetails
+            document={selectedDocument} />
         </DialogWithHeader>
 
       </main>

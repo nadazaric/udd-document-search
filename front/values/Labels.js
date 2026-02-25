@@ -41,7 +41,10 @@ export const LABEL = {
     FULLTEXT_PDF_HINT: 'Search within the report text extracted from the PDF.',
     BOOLEAN_SEMI_STRUCTURED_TITLE: 'Advanced Boolean Search',
     BOOLEAN_SEMI_STRUCTURED_HINT: 'Combine conditions with AND / OR / NOT, with C-like operator precedence.',
+    LOCATION_SEARCH_TITLE: "Search by location",
+    LOCATION_SEARCH_HINT: "Geo-distance search using a city/address and radius (km).",
     TEXT: 'Text',
     DOCUMENT_DETAILS: 'Document Details',
-    QUERY: 'Query'
+    QUERY: 'Query',
+    DISTANCE: 'Distance (km)'
 }

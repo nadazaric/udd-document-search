@@ -1,1 +1,2 @@
 export const BACK_BASE_URL = "http://localhost:8080/api"
+export const KIBANA_VISUALISATION_URL = "http://localhost:63112/app/dashboards#/view/a8179914-1f11-44e1-8d42-32c6719ad55a?embed=true&_g=(refreshInterval:(pause:!f,value:10000),time:(from:'2026-01-01T18:32:22.171Z',to:now))&_a=()&hide-filter-bar=true&show-top-menu=false&show-query-input=false&show-time-filter=false"

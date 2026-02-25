@@ -1,9 +1,14 @@
 package com.udd.back.feature_docs.service.impl;
 
 import ai.djl.translate.TranslateException;
+import co.elastic.clients.elasticsearch._types.DistanceUnit;
+import co.elastic.clients.elasticsearch._types.GeoLocation;
 import co.elastic.clients.elasticsearch._types.KnnQuery;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import com.udd.back.feature_docs.dto.*;
 import com.udd.back.feature_docs.enumeration.Classification;
+import com.udd.back.feature_docs.model.GeocodeResult;
+import com.udd.back.feature_docs.service.interf.GeocodingService;
 import com.udd.back.feature_docs.service.interf.HelperBooleanSearchService;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import com.udd.back.feature_docs.util.VectorizationUtil;
@@ -26,6 +31,7 @@ import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.HighlightQuery;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import java.util.*;
 import java.util.function.Function;
@@ -36,6 +42,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired VectorizationUtil vectorizationUtil;
     @Autowired HelperBooleanSearchService helperBooleanSearchService;
+    @Autowired GeocodingService geocodingService;
 
     private final ElasticsearchOperations elasticsearchTemplate;
 
@@ -44,10 +51,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Page<SearchBaseResponseDTO> searchByAnalystHashClassification(
-            SearchByAnalystHashClassificationRequestDTO req,
-            Pageable pageable
-    ) {
+    public Page<SearchBaseResponseDTO> searchByAnalystHashClassification(SearchByAnalystHashClassificationRequestDTO req, Pageable pageable) {
         String analyst = req.getForensicAnalystName().trim();
         String hash = req.getHash().trim();
         String classification = req.getThreatClassification().name();
@@ -74,10 +78,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Page<SearchBaseResponseDTO> searchByOrganizationThreatName(
-            SearchByOrganizationThreatNameDTO req,
-            Pageable pageable
-    ) {
+    public Page<SearchBaseResponseDTO> searchByOrganizationThreatName(SearchByOrganizationThreatNameDTO req, Pageable pageable) {
         String organization = req.getCertOrganization().trim();
         String threatName = req.getMalwareOrThreatName().trim();
 
@@ -193,6 +194,43 @@ public class SearchServiceImpl implements SearchService {
         NativeQuery nativeQuery = b.build();
 
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBooleanResponseDTO);
+    }
+
+    @Override
+    public Page<SearchBaseResponseDTO> searchByAddress(SearchByLocationRequestDTO req, Pageable pageable) {
+        Optional<GeocodeResult> geocodeResult = geocodingService.geocode(req.getAddress());
+        if (geocodeResult.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Address is not correct.");
+        }
+
+        GeoPoint geoPoint = geocodeResult.get().getGeoPoint();;
+
+        GeoLocation location = GeoLocation.of(gl -> gl
+                .latlon(ll -> ll.lat(geoPoint.getLat()).lon(geoPoint.getLon()))
+        );
+
+        Query geoDistanceQuery = Query.of(q -> q.geoDistance(gd -> gd
+                .field("geoPoint")
+                .distance(req.getDistance().toString() + DistanceUnit.Kilometers.jsonValue())
+                .location(location)
+        ));
+
+        BoolQuery bool = new BoolQuery.Builder()
+                .filter(geoDistanceQuery)
+                .build();
+
+        NativeQuery nativeQuery = new NativeQueryBuilder()
+                .withQuery(bool._toQuery())
+                .withPageable(pageable)
+                .withSort(s -> s.geoDistance(g -> g
+                        .field("geoPoint")
+                        .location(location)
+                        .unit(DistanceUnit.Kilometers)
+                        .order(SortOrder.Asc)
+                ))
+                .build();
+
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBaseResponseDTO);
     }
 
     private HighlightQuery buildHighlightQuery(List<String> fields, Integer fragmentSize) {

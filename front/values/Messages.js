@@ -3,7 +3,11 @@ export const ERROR = {
     REGISTRATION_USERNAME_EXIST: 'This username or email is already taken. Please choose another.',
     LOGIN_WRONG_CREDENTIALS: 'Invalid username or password. Please check your credentials and try again.',
     SERVER: 'An unexpected error occurred. Please try again later.',
-    GEOCODING: 'We can’t geocode this address. Please provide a different one.'
+    GEOCODING: 'We can’t geocode this address. Please provide a different one.',
+    WRONG_PARAMETERS: 'Invalid search parameters.',
+    ADDRESS_NOT_FOUND: "Address not found.",
+    DISTANCE_NOT_ZERO: 'Distance must be at least 1.',
+    DISTANCE_NOT_NUBER: 'Distance must be a number.'
 }
 
 export const SUCCESS = {
