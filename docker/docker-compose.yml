@@ -86,6 +86,9 @@ services:
     networks:
       - app-network
     restart: always
+    volumes:
+      - ../logs:/logs:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
 
 volumes:
   postgres-db-volume:
