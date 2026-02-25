@@ -1,0 +1,100 @@
+.card {
+    padding: 16px;
+    border-radius: var(--BorderRadius);
+    background: rgba(var(--DarkGray), 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.clickableCard {
+    transition: transform 140ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    cursor: pointer;
+}
+
+.clickableCard:hover {
+    background: rgba(var(--DarkGray), 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.badgesWrapper {
+    display: flex;
+    gap: 5px;
+}
+
+.badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: var(--BorderRadius);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.badge_low {
+    background: rgba(46, 125, 50, 0.12);
+}
+
+.badge_medium {
+    background: rgba(245, 124, 0, 0.14);
+}
+
+.badge_high {
+    background: rgba(211, 47, 47, 0.12);
+}
+
+.badge_critical {
+    background: rgba(123, 31, 162, 0.12);
+}
+
+.badgeNeutral {
+    background: transparent;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10px;
+    padding: 6px 0;
+}
+
+.label {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.value {
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mono {
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.highlightBox {
+  white-space: pre-wrap;  
+  word-break: break-word;
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.8;
+}

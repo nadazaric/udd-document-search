@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.1.5</version>
 		<relativePath/>
 	</parent>
 	<groupId>com.udd</groupId>
@@ -90,11 +90,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.elasticsearch</groupId>-->
-<!--			<artifactId>elasticsearch</artifactId>-->
-<!--			<version>8.13.3</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>8.13.3</version>
+		</dependency>
+		<dependency>
+			<groupId>ai.djl.huggingface</groupId>
+			<artifactId>tokenizers</artifactId>
+			<version>0.28.0</version>
+		</dependency>
+		<dependency>
+			<groupId>ai.djl.pytorch</groupId>
+			<artifactId>pytorch-engine</artifactId>
+			<version>0.28.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

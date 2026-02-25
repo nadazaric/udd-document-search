@@ -13,10 +13,10 @@ public class ForensicReport {
     @Id
     private UUID id;
 
-    @Field(type = FieldType.Text, store = true, name = "forensicAnalystName")
+    @Field(type = FieldType.Text, store = true, name = "forensicAnalystName", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
     private String forensicAnalystName;
 
-    @Field(type = FieldType.Text, store = true, name = "certOrganization")
+    @Field(type = FieldType.Text, store = true, name = "certOrganization", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
     private String certOrganization;
 
     @Field(type = FieldType.Text, store = true, name = "address")
@@ -26,10 +26,10 @@ public class ForensicReport {
     @Field(store = true, name = "geoPoint")
     private GeoPoint geoPoint;
 
-    @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName")
+    @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
     private String malwareOrThreatName;
 
-    @Field(type = FieldType.Text, store = true, name = "behaviorDescription")
+    @Field(type = FieldType.Text, store = true, name = "behaviorDescription", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String behaviorDescription;
 
     @Field(type = FieldType.Keyword, store = true, name = "threatClassification")
@@ -41,7 +41,6 @@ public class ForensicReport {
     @Field(type = FieldType.Text, store = true, name = "content", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String content;
 
-    // TODO: Implement vectorization
     @Field(type = FieldType.Dense_Vector, dims = 384, similarity = "cosine", name = "vectorizedContent")
     private float[] vectorizedContent;
 

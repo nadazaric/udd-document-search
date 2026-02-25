@@ -1,0 +1,37 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--BorderRadius);
+    background: rgba(var(--DarkGray), 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pageText {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.subText {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.strong {
+    font-weight: 800;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}

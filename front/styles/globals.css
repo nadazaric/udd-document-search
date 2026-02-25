@@ -38,6 +38,7 @@ body {
 .spacer-h-xs { height: 5px; }
 .spacer-h-s { height: 10px; }
 .spacer-h-m { height: 15px; }
+.spacer-h-l { height: 20px; }
 
 /* ------------------------------------------------------------------------------------------------------ Width and Hight */
 .w-full { width: 100% !important; }
@@ -74,4 +75,8 @@ body {
 .icon:hover {
   color: rgb(var(--PrimaryColor));
   opacity: 1;
+}
+
+em {
+  background-color: rgba(var(--SecondaryColor), 1);
 }
