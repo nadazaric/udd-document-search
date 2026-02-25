@@ -1,14 +1,19 @@
 import { logOut } from '@/helpers/Auth'
 import style from '../../styles/Navbar.module.css'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@mui/material'
+import { useRouter } from 'next/router'
 
 export default function Navbar({
     onAddNewButtonClicked
 }) {
-
+    const router = useRouter()
     const [selectedOption, setSelectedOption] = useState(OPTIONS.INDEXED)
+
+    useEffect(() => {
+        if (router.pathname.split('/')[1] == OPTIONS.STATISTICS) setSelectedOption(OPTIONS.STATISTICS)
+    }, [router])
 
     return (
         <div className={`${style.wrapper}`}>
@@ -29,6 +34,13 @@ export default function Navbar({
                 </Button>
 
                 <Link
+                    className={`${style.option} ${selectedOption === OPTIONS.STATISTICS ? style.selectedOption : ''}`}
+                    href={`/statistics`}
+                    onClick={() => setSelectedOption(OPTIONS.STATISTICS)} >
+                    Statistics
+                </Link>
+
+                <Link
                     className={style.option}
                     href={`/auth`}
                     onClick={() => logOut()} >
@@ -42,5 +54,5 @@ export default function Navbar({
 export const OPTIONS = {
     INDEXED: 'indexed',
     ADD: 'add',
-    REJECTED: 'rejected'
+    STATISTICS: 'statistics'
 }
