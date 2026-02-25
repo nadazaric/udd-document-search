@@ -264,7 +264,7 @@ public class SearchServiceImpl implements SearchService {
 
     private SearchBooleanResponseDTO mapToBooleanResponseDTO(SearchHit<ForensicReport> hit) {
         SearchBooleanResponseDTO response = new SearchBooleanResponseDTO(mapToBaseResponseDTO(hit));
-        String behaviorDescription = firstHighlightOrValue(hit, "behaviorDescription", response.getMalwareOrThreatName());
+        String behaviorDescription = firstHighlightOrValue(hit, "behaviorDescription", response.getBehaviorDescription());
         response.setBehaviorDescription(behaviorDescription);
         return response;
     }
