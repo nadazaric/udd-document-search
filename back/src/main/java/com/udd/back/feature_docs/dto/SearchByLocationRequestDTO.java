@@ -11,15 +11,15 @@ public class SearchByLocationRequestDTO {
 
     @NotNull
     @Min(1)
-    private Integer radius;
+    private Integer distance;
 
     public SearchByLocationRequestDTO() {
 
     }
 
-    public SearchByLocationRequestDTO(String address, Integer radius) {
+    public SearchByLocationRequestDTO(String address, Integer distance) {
         this.address = address;
-        this.radius = radius;
+        this.distance = distance;
     }
 
     public String getAddress() {
@@ -30,11 +30,11 @@ public class SearchByLocationRequestDTO {
         this.address = address;
     }
 
-    public Integer getRadius() {
-        return radius;
+    public Integer getDistance() {
+        return distance;
     }
 
-    public void setRadius(Integer radius) {
-        this.radius = radius;
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 }

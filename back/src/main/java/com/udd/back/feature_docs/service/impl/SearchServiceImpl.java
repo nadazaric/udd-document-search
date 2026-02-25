@@ -199,7 +199,7 @@ public class SearchServiceImpl implements SearchService {
     public Page<SearchBaseResponseDTO> searchByAddress(SearchByLocationRequestDTO req, Pageable pageable) {
         Optional<GeoPoint> geoPoint = geocodingService.geocode(req.getAddress());
         if (geoPoint.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is not correct.");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Address is not correct.");
         }
 
         GeoLocation location = GeoLocation.of(gl -> gl
@@ -208,7 +208,7 @@ public class SearchServiceImpl implements SearchService {
 
         Query geoDistanceQuery = Query.of(q -> q.geoDistance(gd -> gd
                 .field("geoPoint")
-                .distance(req.getRadius().toString() + DistanceUnit.Kilometers.jsonValue())
+                .distance(req.getDistance().toString() + DistanceUnit.Kilometers.jsonValue())
                 .location(location)
         ));
 
