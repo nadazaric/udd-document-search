@@ -27,47 +27,41 @@ export default function Home() {
   const pageSize = 9;
 
   function generateUrl(mode) {
-    if (mode === SEARCH_PAGE.ANALYST_HASH_CLASS) {
-      setClickable(false)
-      return 'by-analyst-hash-classification'
-    } else if (mode === SEARCH_PAGE.ORG_THREAT) {
-      setClickable(false)
-      return 'by-organization-threat-name'
-    } else if (mode === SEARCH_PAGE.KNN_FREE_TEXT) {
-      setClickable(true)
-      return 'knn'
-    } else if (mode === SEARCH_PAGE.FULLTEXT_PDF) {
-      setClickable(true)
-      return 'full-text'
-    } else if (mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED) {
-      setClickable(true)
-      return 'boolean'
-    } else {
-      setClickable(false)
-      return 'by-location'
-    }
+    if (mode === SEARCH_PAGE.ANALYST_HASH_CLASS) return "by-analyst-hash-classification"
+    if (mode === SEARCH_PAGE.ORG_THREAT) return "by-organization-threat-name"
+    if (mode === SEARCH_PAGE.KNN_FREE_TEXT) return "knn"
+    if (mode === SEARCH_PAGE.FULLTEXT_PDF) return "full-text"
+    if (mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED) return "boolean"
+    return "by-location"
+  }
+
+  function isClickableMode(mode) {
+    return (
+      mode === SEARCH_PAGE.KNN_FREE_TEXT ||
+      mode === SEARCH_PAGE.FULLTEXT_PDF ||
+      mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED
+    )
   }
 
   async function runSearch(req) {
     const { mode, payload, page, size } = req
-
     const params = { page, size }
+
+    setClickable(isClickableMode(mode))
 
     try {
       const response = await axios.post(`${BACK_BASE_URL}/search/${generateUrl(mode)}`, payload, { params })
-      if (response.status === 200) {
-        if (!response.data.totalElements) {
-          showPopup({
-            message: INFO.DOCUMENTS_NOT_FOUND,
-            severity: SEVERITY.WARNING
-          })
-        }
 
-        setSearchRequest(req)
-        setResults(response.data)
+      if (!response.data.totalElements) {
+        showPopup({ message: INFO.DOCUMENTS_NOT_FOUND, severity: SEVERITY.WARNING })
       }
+
+      setSearchRequest(req)
+      setResults(response.data)
+
     } catch (error) {
       const status = error?.response?.status
+
       showPopup({
         message: status === 400
           ? ERROR.WRONG_PARAMETERS
@@ -76,6 +70,8 @@ export default function Home() {
             : ERROR.SERVER,
         severity: SEVERITY.ERROR
       })
+
+      setResults({ content: [], totalElements: 0, totalPages: 0, first: true, last:true, number: 0})
     }
   }
 
