@@ -4,6 +4,7 @@ import ai.djl.translate.TranslateException;
 import co.elastic.clients.elasticsearch._types.KnnQuery;
 import com.udd.back.feature_docs.dto.*;
 import com.udd.back.feature_docs.enumeration.Classification;
+import com.udd.back.feature_docs.service.interf.HelperBooleanSearchService;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
@@ -26,8 +27,7 @@ import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.HighlightQuery;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class SearchServiceImpl implements SearchService {
 
     @Autowired VectorizationUtil vectorizationUtil;
+    @Autowired HelperBooleanSearchService helperBooleanSearchService;
 
     private final ElasticsearchOperations elasticsearchTemplate;
 
@@ -174,6 +175,26 @@ public class SearchServiceImpl implements SearchService {
         return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToContentDTO);
     }
 
+    @Override
+    public Page<SearchBooleanResponseDTO> combineBoolean(SearchTextRequestDTO req, Pageable pageable) {
+        String expression = req.getText().trim();
+
+        Set<String> highlightFields = new HashSet<>();
+        Query query = helperBooleanSearchService.buildQuery(expression, highlightFields);
+
+        NativeQueryBuilder b = new NativeQueryBuilder()
+                .withQuery(query)
+                .withPageable(pageable);
+
+        if (!highlightFields.isEmpty()) {
+            b.withHighlightQuery(buildHighlightQuery(new ArrayList<>(highlightFields), 200));
+        }
+
+        NativeQuery nativeQuery = b.build();
+
+        return runQuery(nativeQuery, ForensicReport.class, pageable, this::mapToBooleanResponseDTO);
+    }
+
     private HighlightQuery buildHighlightQuery(List<String> fields, Integer fragmentSize) {
         HighlightParameters.HighlightParametersBuilder paramsBuilder = HighlightParameters.builder()
                 .withPreTags("<em>")
@@ -238,6 +259,13 @@ public class SearchServiceImpl implements SearchService {
         SearchKnnResponseDTO response = new SearchKnnResponseDTO(mapToBaseResponseDTO(hit));
         response.setScore(hit.getScore());
         response.setBehaviorDescription(hit.getContent().getBehaviorDescription());
+        return response;
+    }
+
+    private SearchBooleanResponseDTO mapToBooleanResponseDTO(SearchHit<ForensicReport> hit) {
+        SearchBooleanResponseDTO response = new SearchBooleanResponseDTO(mapToBaseResponseDTO(hit));
+        String behaviorDescription = firstHighlightOrValue(hit, "behaviorDescription", response.getMalwareOrThreatName());
+        response.setBehaviorDescription(behaviorDescription);
         return response;
     }
 

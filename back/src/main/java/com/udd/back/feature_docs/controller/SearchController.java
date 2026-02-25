@@ -49,4 +49,12 @@ public class SearchController {
         return new ResponseEntity<>(searchService.searchFullText(request, pageable), HttpStatus.OK);
     }
 
+    @PostMapping("/boolean")
+    public ResponseEntity<Page<SearchBooleanResponseDTO>> booleanSearch(
+            @Valid @RequestBody SearchTextRequestDTO request,
+            Pageable pageable
+    ) {
+        return new ResponseEntity<>(searchService.combineBoolean(request, pageable), HttpStatus.OK);
+    }
+
 }

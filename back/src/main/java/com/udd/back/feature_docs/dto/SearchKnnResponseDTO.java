@@ -16,8 +16,7 @@ public class SearchKnnResponseDTO extends SearchBaseResponseDTO {
             searchBaseResponseDTO.getThreatClassification(),
             searchBaseResponseDTO.getCertOrganization(),
             searchBaseResponseDTO.getMalwareOrThreatName(),
-            searchBaseResponseDTO.getAddress())
-        ;
+            searchBaseResponseDTO.getAddress());
     }
 
     public SearchKnnResponseDTO(UUID id, String forensicAnalystName, String hash, Classification threatClassification, String certOrganization, String malwareOrThreatName, String address, String behaviorDescription) {

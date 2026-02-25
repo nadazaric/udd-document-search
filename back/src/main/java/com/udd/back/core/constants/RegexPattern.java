@@ -14,4 +14,6 @@ public class RegexPattern {
     public static final Pattern ADDRESS         = Pattern.compile("(?im)address\\s*[:\\-]\\s*(.+)$");
     public static final Pattern HASH            = Pattern.compile("(?im)\\b(?:md5|sha-?256)\\b\\s*[:\\-]?\\s*([a-f0-9]{32}|[a-f0-9]{64})\\b");
 
+    public static final Pattern TERM_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z0-9_]*)\\s*:\\s*(\"([^\"]*)\"|[^\\s()]+)");
+
 }

@@ -14,4 +14,6 @@ public interface SearchService {
 
     Page<SearchContentResponse> searchFullText(SearchTextRequestDTO req, Pageable pageable);
 
+    Page<SearchBooleanResponseDTO> combineBoolean(SearchTextRequestDTO req, Pageable pageable);
+
 }
