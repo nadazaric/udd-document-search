@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="UDD_EVENTS_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>../logs/udd-events.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="udd.events" level="INFO" additivity="false">
+        <appender-ref ref="UDD_EVENTS_FILE"/>
+    </logger>
+
+</configuration>

@@ -2,6 +2,7 @@ package com.udd.back.feature_docs.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.udd.back.feature_docs.model.GeocodeResult;
 import com.udd.back.feature_docs.service.interf.GeocodingService;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class LocationIqGeocodingServiceImpl implements GeocodingService {
     private String apiKey;
 
     @Override
-    public Optional<GeoPoint> geocode(String address) {
+    public Optional<GeocodeResult> geocode(String address) {
         if (address == null || address.isBlank()) return Optional.empty();
 
         URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl + "/search")
@@ -38,6 +39,7 @@ public class LocationIqGeocodingServiceImpl implements GeocodingService {
                 .queryParam("q", address)
                 .queryParam("format", "json")
                 .queryParam("limit", 1)
+                .queryParam("addressdetails", 1)
                 .build()
                 .toUri();
 
@@ -63,14 +65,40 @@ public class LocationIqGeocodingServiceImpl implements GeocodingService {
             JsonNode lonNode = first.get("lon");
             if (latNode == null || lonNode == null) return Optional.empty();
 
-            return Optional.of(new GeoPoint(
-                    Double.parseDouble(latNode.asText()),
-                    Double.parseDouble(lonNode.asText())
-            ));
+            JsonNode a = first.get("address");
+            System.err.println(a);
+            String city;
+            if (a != null && a.isObject()) {
+                city = firstNonBlank(
+                        textOrNull(a, "city"),
+                        textOrNull(a, "town"),
+                        textOrNull(a, "village"),
+                        textOrNull(a, "municipality"),
+                        textOrNull(a, "city_district")
+                );
+            } else return Optional.empty();
+
+            if (city == null) return Optional.empty();
+
+            GeoPoint geoPoint = new GeoPoint(Double.parseDouble(latNode.asText()), Double.parseDouble(lonNode.asText()));
+
+            return Optional.of(new GeocodeResult(geoPoint, city));
         } catch (Exception e) {
             return Optional.empty();
         }
 
+    }
+
+    private String textOrNull(JsonNode node, String field) {
+        JsonNode v = node.get(field);
+        return (v == null || v.isNull()) ? null : v.asText();
+    }
+
+    private String firstNonBlank(String... vals) {
+        for (String v : vals) {
+            if (v != null && !v.isBlank()) return v;
+        }
+        return null;
     }
 
 }

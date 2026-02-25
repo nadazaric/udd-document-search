@@ -4,6 +4,7 @@ import ai.djl.translate.TranslateException;
 import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.FileStatus;
 import com.udd.back.feature_docs.model.FileMetadata;
+import com.udd.back.feature_docs.model.GeocodeResult;
 import com.udd.back.feature_docs.service.interf.*;
 import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
@@ -27,6 +28,8 @@ public class IndexFileServiceImpl implements IndexFileService {
     @Autowired PdfExtractService pdfExtractService;
     @Autowired FileService fileService;
     @Autowired VectorizationUtil vectorizationUtil;
+    private static final org.slf4j.Logger EVENT_LOGGER =
+            org.slf4j.LoggerFactory.getLogger("udd.events");
 
     @Override
     public IndexDocumentDTO index(IndexDocumentDTO indexDocumentDTO) {
@@ -37,8 +40,8 @@ public class IndexFileServiceImpl implements IndexFileService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("File status is CONFIRMED or REJECTED. File ID: %s.", indexDocumentDTO.getId()));
         }
 
-        Optional<GeoPoint> geoPoint = geocodingService.geocode(indexDocumentDTO.getAddress());
-        if (geoPoint.isEmpty()) return indexDocumentDTO;
+        Optional<GeocodeResult> geocodeResult = geocodingService.geocode(indexDocumentDTO.getAddress());
+        if (geocodeResult.isEmpty()) return indexDocumentDTO;
 
         ForensicReport forensicReport = new ForensicReport();
 
@@ -46,7 +49,7 @@ public class IndexFileServiceImpl implements IndexFileService {
         forensicReport.setForensicAnalystName(indexDocumentDTO.getForensicAnalystName());
         forensicReport.setCertOrganization(indexDocumentDTO.getCertOrganization());
         forensicReport.setAddress(indexDocumentDTO.getAddress());
-        forensicReport.setGeoPoint(geoPoint.get());
+        forensicReport.setGeoPoint(geocodeResult.get().getGeoPoint());
         forensicReport.setMalwareOrThreatName(indexDocumentDTO.getMalwareOrThreatName());
         forensicReport.setBehaviorDescription(indexDocumentDTO.getBehaviorDescription());
         forensicReport.setThreatClassification(indexDocumentDTO.getThreatClassification().toString());
@@ -69,6 +72,8 @@ public class IndexFileServiceImpl implements IndexFileService {
 
         fileIndexRepository.save(forensicReport);
         indexDocumentDTO.setGeocoded(true);
+
+        EVENT_LOGGER.info("{\"event\":\"DOC_INDEXED\",\"timestamp\":\"{}\",\"city\":\"{}\",\"forensicAnalystName\":\"{}\",\"malwareOrThreatName\":\"{}\"}", java.time.Instant.now(), geocodeResult.get().getCity(), forensicReport.getForensicAnalystName(), forensicReport.getMalwareOrThreatName());
 
         return indexDocumentDTO;
     }

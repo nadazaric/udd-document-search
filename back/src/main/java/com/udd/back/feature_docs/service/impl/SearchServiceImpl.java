@@ -7,6 +7,7 @@ import co.elastic.clients.elasticsearch._types.KnnQuery;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import com.udd.back.feature_docs.dto.*;
 import com.udd.back.feature_docs.enumeration.Classification;
+import com.udd.back.feature_docs.model.GeocodeResult;
 import com.udd.back.feature_docs.service.interf.GeocodingService;
 import com.udd.back.feature_docs.service.interf.HelperBooleanSearchService;
 import com.udd.back.feature_docs.service.interf.SearchService;
@@ -197,13 +198,15 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Page<SearchBaseResponseDTO> searchByAddress(SearchByLocationRequestDTO req, Pageable pageable) {
-        Optional<GeoPoint> geoPoint = geocodingService.geocode(req.getAddress());
-        if (geoPoint.isEmpty()) {
+        Optional<GeocodeResult> geocodeResult = geocodingService.geocode(req.getAddress());
+        if (geocodeResult.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Address is not correct.");
         }
 
+        GeoPoint geoPoint = geocodeResult.get().getGeoPoint();;
+
         GeoLocation location = GeoLocation.of(gl -> gl
-                .latlon(ll -> ll.lat(geoPoint.get().getLat()).lon(geoPoint.get().getLon()))
+                .latlon(ll -> ll.lat(geoPoint.getLat()).lon(geoPoint.getLon()))
         );
 
         Query geoDistanceQuery = Query.of(q -> q.geoDistance(gd -> gd

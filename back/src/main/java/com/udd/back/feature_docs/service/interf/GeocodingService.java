@@ -1,11 +1,11 @@
 package com.udd.back.feature_docs.service.interf;
 
-import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+import com.udd.back.feature_docs.model.GeocodeResult;
 
 import java.util.Optional;
 
 public interface GeocodingService {
 
-    Optional<GeoPoint> geocode(String address);
+    Optional<GeocodeResult> geocode(String address);
 
 }
