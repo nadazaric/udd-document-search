@@ -32,7 +32,9 @@ export default function DocumentDetails({ document }) {
                 <div className={style.card}>
                     <div className={style.title}>{LABEL.BEHAVIOR_DESCRIPTION}</div>
                     <div className="spacer-h-s" />
-                    <div className={style.paragraph}>{behavior}</div>
+                    <div
+                        className={style.paragraph}
+                        dangerouslySetInnerHTML={{ __html: behavior }} />
                 </div>
             }
 

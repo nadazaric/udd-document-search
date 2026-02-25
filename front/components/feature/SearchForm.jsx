@@ -7,6 +7,7 @@ import { LABEL } from "@/values/Labels"
 import SearchByOrganizationThreatNameForm from "./SearchByIrganizationThreatNameForm"
 import SearchKnnForm from "./SearchKnnForm"
 import SearchFullTextForm from "./SearchFullTextForm"
+import SearchCombinedBooleanForm from "./SearchCombinedBooleanForm"
 
 export default function SearchForm({
     isOpen,
@@ -77,6 +78,12 @@ export default function SearchForm({
 
             {selectedKey === SEARCH_PAGE.FULLTEXT_PDF &&
                 <SearchFullTextForm
+                    isOpen={isOpen}
+                    onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
+            }
+
+            {selectedKey === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED &&
+                <SearchCombinedBooleanForm
                     isOpen={isOpen}
                     onSubmit={(payload) => onSubmit?.(selectedKey, payload)} />
             }

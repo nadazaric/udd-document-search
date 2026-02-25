@@ -44,7 +44,10 @@ export default function Home() {
     } else if (mode === SEARCH_PAGE.FULLTEXT_PDF) {
       response = await axios.post(`${BACK_BASE_URL}/search/full-text`, payload, { params })
       setClickable(true)
-    }  else {
+    } else if (mode === SEARCH_PAGE.BOOLEAN_SEMI_STRUCTURED) {
+      response = await axios.post(`${BACK_BASE_URL}/search/boolean`, payload, { params })
+      setClickable(true)
+    } else {
       return
     }
 
@@ -70,6 +73,7 @@ export default function Home() {
   }
 
   function openDetailsDialog(item) {
+    console.log(item)
     setDeatilsDialogOpen(true)
     setSelectedDocument(item)
   }
