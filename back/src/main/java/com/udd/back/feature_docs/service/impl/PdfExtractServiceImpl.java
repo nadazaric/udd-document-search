@@ -17,7 +17,8 @@ public class PdfExtractServiceImpl implements PdfExtractService {
 
         try (PDDocument doc = PDDocument.load(pdfBytes)) {
             PDFTextStripper stripper = new PDFTextStripper();
-            return stripper.getText(doc);
+            String content = stripper.getText(doc);
+            return normalizeWhitespace(content);
         } catch (IOException e) {
             throw new RuntimeException("Failed to extract text from PDF", e);
         }
@@ -33,6 +34,17 @@ public class PdfExtractServiceImpl implements PdfExtractService {
         }
 
         return  bytes;
+    }
+
+    private String normalizeWhitespace(String s) {
+        if (s == null) return "";
+        s = s.replace('\u00A0', ' ');
+        s = s.replace("\r\n", "\n");
+        s = s.replace("\r", "\n");
+        s = s.replaceAll("[\\t\\f]+", " ");
+        s = s.replaceAll(" +", " ");
+        s = s.replaceAll("\\n{3,}", "\n\n");
+        return s.trim();
     }
 
 }

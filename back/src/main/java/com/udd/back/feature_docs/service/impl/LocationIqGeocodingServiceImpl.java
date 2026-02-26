@@ -66,7 +66,6 @@ public class LocationIqGeocodingServiceImpl implements GeocodingService {
             if (latNode == null || lonNode == null) return Optional.empty();
 
             JsonNode a = first.get("address");
-            System.err.println(a);
             String city;
             if (a != null && a.isObject()) {
                 city = firstNonBlank(

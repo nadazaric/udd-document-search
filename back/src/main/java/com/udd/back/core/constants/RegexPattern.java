@@ -5,15 +5,32 @@ import java.util.regex.Pattern;
 public class RegexPattern {
 
     // PARSING REGEX
-    // TODO: Add more options (Serbian and Cyrillic)
-    public static final Pattern ANALYST         = Pattern.compile("(?im)forensic\\s*analyst\\s*name\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern ORG             = Pattern.compile("(?im)cert\\s*organization\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern MALWARE         = Pattern.compile("(?im)(?:malware|threat)\\s*name\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern DESCRIPTION     = Pattern.compile("(?im)description\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern CLASSIFICATION  = Pattern.compile("(?im)threat\\s*classification\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern ADDRESS         = Pattern.compile("(?im)address\\s*[:\\-]\\s*(.+)$");
-    public static final Pattern HASH            = Pattern.compile("(?im)\\b(?:md5|sha-?256)\\b\\s*[:\\-]?\\s*([a-f0-9]{32}|[a-f0-9]{64})\\b");
+    public static final String L_ORG = "(?:Organizacija|Организација)";
+    public static final String L_CLASS = "(?:Klasifikacija|Класификација)";
+    public static final String L_SIGNATURE = "(?:Potpis forenzičara|Потпис форензичара)";
+    public static final String L_BEHAVIOR = "(?:Opis\\s+ponašanja\\s+malvera\\s*/\\s*prijetnje|Опис\\s+понашања\\s+малвера\\s*/\\s*пријетње)";
 
+    public static final Pattern ORG_AND_ADDRESS = Pattern.compile(
+            "(?s)" + L_ORG + "\\s*:\\s*(.+?)\\s*(?:\\r?\\n)+\\s*(.+?)\\s*(?:\\r?\\n)",
+            Pattern.UNICODE_CASE
+    );
+
+    public static final Pattern CLASS_AND_HASH = Pattern.compile(
+            "(?im)" + L_CLASS + "\\s*:\\s*(niska|srednja|visoka|kritična|ниска|средња|висока|критична)\\s*,\\s*([a-fA-F0-9]{32,64})\\b",
+            Pattern.UNICODE_CASE
+    );
+
+    public static final Pattern THREAT = Pattern.compile(
+            "(?is)(?:ukazuje\\s+na|указује\\s+на)\\s+(.+?)\\s*\\.",
+            Pattern.UNICODE_CASE
+    );
+
+    public static final Pattern BEHAVIOR_AND_ANALYST = Pattern.compile(
+            "(?s)" + L_BEHAVIOR + "\\s*:\\s*(.+?)\\s*(?:\\r?\\n)+\\s*([\\p{L}]+\\s+[\\p{L}]+)\\s*(?:\\r?\\n)+\\s*" + L_SIGNATURE,
+            Pattern.UNICODE_CASE
+    );
+
+    // OTHER
     public static final Pattern TERM_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z0-9_]*)\\s*:\\s*(\"([^\"]*)\"|[^\\s()]+)");
 
 }

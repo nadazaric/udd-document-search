@@ -5,7 +5,6 @@ import com.udd.back.feature_docs.dto.IndexDocumentDTO;
 import com.udd.back.feature_docs.enumeration.Classification;
 import com.udd.back.feature_docs.enumeration.FileStatus;
 import com.udd.back.feature_docs.model.FileMetadata;
-import com.udd.back.feature_docs.model.InMemoryMultipartFile;
 import com.udd.back.feature_docs.service.interf.FileMetadataService;
 import com.udd.back.feature_docs.service.interf.FileService;
 import com.udd.back.feature_docs.service.interf.ParseFileService;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -63,20 +63,18 @@ public class ParseFileServiceImpl implements ParseFileService {
     private IndexDocumentDTO parse(MultipartFile file) {
         content = pdfExtractService.extractText(file);
 
-        String forensicAnalystName = regexMatch(RegexPattern.ANALYST);
-        String certOrganization = regexMatch(RegexPattern.ORG);
-        String malwareOrThreatName = regexMatch(RegexPattern.MALWARE);
-        String behaviorDescription = regexMatch(RegexPattern.DESCRIPTION);
-        String threatClassification = regexMatch(RegexPattern.CLASSIFICATION);
-        String address = regexMatch(RegexPattern.ADDRESS);
-        String hash = regexMatch(RegexPattern.HASH);
+        String certOrganization = regexMatch(RegexPattern.ORG_AND_ADDRESS, 1);
+        String address = regexMatch(RegexPattern.ORG_AND_ADDRESS, 2);
 
-        Classification classification = null;
-        if (threatClassification != null && !threatClassification.isBlank()) {
-            try {
-                classification = Classification.valueOf(threatClassification.trim().toUpperCase());
-            } catch (IllegalArgumentException ignored) {}
-        }
+        String malwareOrThreatName = regexMatch(RegexPattern.THREAT);
+
+        String clsRaw = regexMatch(RegexPattern.CLASS_AND_HASH, 1);
+        String hash = regexMatch(RegexPattern.CLASS_AND_HASH, 2);
+
+        String behaviorDescription = Objects.requireNonNull(regexMatch(RegexPattern.BEHAVIOR_AND_ANALYST, 1)).replaceAll("\\n+", "");
+        String forensicAnalystName = regexMatch(RegexPattern.BEHAVIOR_AND_ANALYST, 2);
+
+        Classification classification = mapClassification(clsRaw);
 
         return new IndexDocumentDTO(
                 null,
@@ -92,8 +90,31 @@ public class ParseFileServiceImpl implements ParseFileService {
     }
 
     private String regexMatch(Pattern pattern) {
+        return regexMatch(pattern, 1);
+    }
+
+    private String regexMatch(Pattern pattern, int group) {
         Matcher matcher = pattern.matcher(content);
-        return matcher.find() ? matcher.group(1).trim() : null;
+        return matcher.find() ? matcher.group(group).trim() : null;
+    }
+
+    private Classification mapClassification(String clsRaw) {
+        if (clsRaw == null) return null;
+
+        String v = clsRaw.trim().toLowerCase();
+
+        return switch (v) {
+            case "niska" -> Classification.LOW;
+            case "srednja" -> Classification.MEDIUM;
+            case "visoka" -> Classification.HIGH;
+            case "kritična" -> Classification.CRITICAL;
+            case "ниска" -> Classification.LOW;
+            case "средња" -> Classification.MEDIUM;
+            case "висока" -> Classification.HIGH;
+            case "критична" -> Classification.CRITICAL;
+            default -> null;
+        };
+
     }
 
 }
