@@ -13,10 +13,10 @@ public class ForensicReport {
     @Id
     private UUID id;
 
-    @Field(type = FieldType.Text, store = true, name = "forensicAnalystName", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
+    @Field(type = FieldType.Text, store = true, name = "forensicAnalystName", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String forensicAnalystName;
 
-    @Field(type = FieldType.Text, store = true, name = "certOrganization", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
+    @Field(type = FieldType.Text, store = true, name = "certOrganization", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")
     private String certOrganization;
 
     @Field(type = FieldType.Text, store = true, name = "address")
@@ -26,7 +26,7 @@ public class ForensicReport {
     @Field(store = true, name = "geoPoint")
     private GeoPoint geoPoint;
 
-    @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName", analyzer = "serbian_simple_custom", searchAnalyzer = "serbian_simple_custom")
+    @Field(type = FieldType.Text, store = true, name = "malwareOrThreatName")
     private String malwareOrThreatName;
 
     @Field(type = FieldType.Text, store = true, name = "behaviorDescription", analyzer = "serbian_custom", searchAnalyzer = "serbian_custom")

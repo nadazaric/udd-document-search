@@ -13,6 +13,7 @@ import com.udd.back.feature_docs.service.interf.HelperBooleanSearchService;
 import com.udd.back.feature_docs.service.interf.SearchService;
 import com.udd.back.feature_docs.util.VectorizationUtil;
 import com.udd.back.index.model.ForensicReport;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -61,7 +62,7 @@ public class SearchServiceImpl implements SearchService {
         if (isPhrase(analyst)) {
             bool.must(m -> m.matchPhrase(mp -> mp.field("forensicAnalystName").query(stripQuotes(analyst))));
         } else {
-            bool.must(m -> m.match(mm -> mm.field("forensicAnalystName").query(analyst)));
+            bool.must(m -> m.match(mm -> mm.field("forensicAnalystName").fuzziness(Fuzziness.ONE.asString()).query(analyst)));
         }
         bool.must(m -> m.term(t -> t.field("hash").value(hash)));
         bool.must(m -> m.term(t -> t.field("threatClassification").value(classification)));
@@ -87,13 +88,13 @@ public class SearchServiceImpl implements SearchService {
         if (isPhrase(organization)) {
             bool.must(m -> m.matchPhrase(mp -> mp.field("certOrganization").query(stripQuotes(organization))));
         } else {
-            bool.must(m -> m.match(mm -> mm.field("certOrganization").query(organization)));
+            bool.must(m -> m.match(mm -> mm.field("certOrganization").fuzziness(Fuzziness.ONE.asString()).query(organization)));
         }
 
         if (isPhrase(threatName)) {
             bool.must(m -> m.matchPhrase(mp -> mp.field("malwareOrThreatName").query(stripQuotes(threatName))));
         } else {
-            bool.must(m -> m.match(mm -> mm.field("malwareOrThreatName").query(threatName)));
+            bool.must(m -> m.match(mm -> mm.field("malwareOrThreatName").fuzziness(Fuzziness.ONE.asString()).query(threatName)));
         }
 
         Query query = bool.build()._toQuery();
