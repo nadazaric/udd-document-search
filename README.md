@@ -18,7 +18,7 @@ This repository also includes:
    - Semantic kNN search using embeddings.
    - Geo-distance search based on indexed location/address data.
   
-5. Kibana Visualizations
+5. _Kibana_ Visualizations
    - Dashboards for visual exploration and analytics over indexed reports using the _ELK_ stack (_Elasticsearch_ + _Logstash_ + _Kibana_).
 
 ## Tech Stack
