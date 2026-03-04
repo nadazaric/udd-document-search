@@ -34,6 +34,10 @@ This repository also includes:
 
 ## Running the Project
 
+> **Note:** This project requires environment configuration files:
+> - a `.env` file for Docker (used by `docker-compose.yml`)
+> - an additional `.env` (or equivalent config) for the backend inside `/resources`
+
 1. **Start infrastructure** (_MinIO_, _PostgreSQL_, _PgAdmin_, _Elasticsearch_, _Logstash_, _Kibana_)
    - From the repository root (where `docker-compose.yml` is located):
 
